@@ -353,8 +353,13 @@ class BlkidEntry:
 
     def splitDev(self):
         dev, part = self.device, ""
-        while dev[-1:] in string.digits:
-            dev, part = dev[:-1], dev[-1] + part
+        if "mmcblk" in dev:
+            part_possibliities=string.digits + "p"
+            while dev[-1:] in part_possibliities:
+                dev, part = dev[:-1], dev[-1] + part
+        else:
+            while dev[-1:] in string.digits:
+                dev, part = dev[:-1], dev[-1] + part
         return dev, part
 
     def isOnieReserved(self):
