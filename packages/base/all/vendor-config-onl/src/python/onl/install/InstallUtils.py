@@ -836,8 +836,10 @@ class GdiskParser(SubprocessMixin):
             if not line[0] in string.digits: continue
 
             partno = int(line.split()[0])
-
-            partDevice = "%s%d" % (self.device, pidx,)
+            if "mmcblk" in self.device:
+                partDevice = "%sp%d" % (self.device, pidx,)
+            else:
+                partDevice = "%s%d" % (self.device, pidx,)
             pidx += 1
             # linux partitions may be numbered differently,
             # if there are holes in the GPT partition table
