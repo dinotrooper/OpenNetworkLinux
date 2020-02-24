@@ -206,7 +206,7 @@ class GrubEnv(SubprocessMixin):
 
         grubOpts = []
         if self.isUEFI:
-            grubOpts.append('--target=x86_64-efi')
+            grubOpts.append('--target=i386-pc')
             grubOpts.append('--no-nvram')
             grubOpts.append('--recheck')
 
@@ -403,7 +403,7 @@ class ProxyGrubEnv(SubprocessMixin):
 
         grubOpts = []
         if self.isUEFI:
-            grubOpts.append('--target=x86_64-efi')
+            grubOpts.append('--target=i386-pc')
             grubOpts.append('--no-nvram')
             grubOpts.append('--bootloader-id=ONL')
             grubOpts.append('--efi-directory=/boot/efi')
