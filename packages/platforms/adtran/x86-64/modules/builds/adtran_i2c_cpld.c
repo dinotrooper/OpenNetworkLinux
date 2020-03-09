@@ -247,11 +247,11 @@ static struct dmi_system_id adtran_8305_dmi_table[] = {
 	},
 };
 
-int platform_accton_adtran_8305(void)
+int platform_adtran_8305(void)
 {
 	return dmi_check_system(adtran_8305_dmi_table);
 }
-EXPORT_SYMBOL(platform_accton_adtran_8305);
+EXPORT_SYMBOL(platform_adtran_8305);
 
 static struct dmi_system_id as5812_54t_dmi_table[] = {
 	{
