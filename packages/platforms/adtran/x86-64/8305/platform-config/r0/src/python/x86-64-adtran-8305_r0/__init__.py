@@ -1,7 +1,7 @@
 from onl.platform.base import *
-from onl.platform.accton import *
+from onl.platform.adtran import *
 
-class OnlPlatform_x86_64_adtran_8305_r0(OnlPlatformAccton,
+class OnlPlatform_x86_64_adtran_8305_r0(OnlPlatformAdtran,
                                               OnlPlatformPortConfig_32x100):
     PLATFORM='x86-64-adtran-8305-r0'
     MODEL="ADTRAN-8305"
@@ -10,7 +10,7 @@ class OnlPlatform_x86_64_adtran_8305_r0(OnlPlatformAccton,
     def baseconfig(self):
         self.insmod('optoe')
         self.insmod('ym2651y')
-        self.insmod('accton_i2c_cpld')
+        self.insmod('adtran_i2c_cpld')
         for m in [ 'fan', 'cpld1', 'psu', 'leds' ]:
             self.insmod("x86-64-adtran-8305-%s.ko" % m)
 
@@ -30,8 +30,8 @@ class OnlPlatform_x86_64_adtran_8305_r0(OnlPlatformAccton,
             ('lm75', 0x4b, 3),
 
             ('8305_cpld1', 0x60, 4),
-            ('accton_i2c_cpld', 0x62, 5),
-            ('accton_i2c_cpld', 0x64, 6),
+            ('adtran_i2c_cpld', 0x62, 5),
+            ('adtran_i2c_cpld', 0x64, 6),
             ])
 
         ########### initialize I2C bus 1 ###########
