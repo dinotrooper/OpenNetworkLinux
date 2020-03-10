@@ -226,7 +226,7 @@ static struct dmi_system_id as7512_dmi_table[] = {
 
 int platform_accton_as7512_32x(void)
 {
-	return dmi_check_system(adtran_8305_dmi_table);
+	return dmi_check_system(as7512_dmi_table);
 }
 EXPORT_SYMBOL(platform_accton_as7512_32x);
 
