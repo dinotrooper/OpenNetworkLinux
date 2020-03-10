@@ -88,7 +88,8 @@ void __onlp_module_init__(void)
     {
         extern int __onlp_platform_version__;
         extern int __onlp_platform_version_default__;
-        __onlp_platform_version_default__ = __onlp_platform_version__;
+        __onlp_platform_version_default__ = 1;
+        __onlp_platform_version__= 1;
     }
 }
 
