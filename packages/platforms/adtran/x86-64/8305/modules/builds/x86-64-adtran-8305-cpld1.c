@@ -446,7 +446,7 @@ static int adtran_8305cpld_probe(struct i2c_client *client,
 		goto exit_remove;
 	}
 
-	8305_cpld_add_client(client);
+	adtran_8305cpld_add_client(client);
 
 	dev_info(&client->dev, "%s: cpld '%s'\n",
 		 dev_name(data->hwmon_dev), client->name);
@@ -469,7 +469,7 @@ static int adtran_8305cpld_remove(struct i2c_client *client)
     hwmon_device_unregister(data->hwmon_dev);
     sysfs_remove_group(&client->dev.kobj, &adtran_8305cpld_group);
     kfree(data);
-	8305_cpld_remove_client(client);
+	adtran_8305cpld_remove_client(client);
 
     return 0;
 }
@@ -496,7 +496,7 @@ int adtran_8305cpld_read(unsigned short cpld_addr, u8 reg)
 
 	return ret;
 }
-EXPORT_SYMBOL(8305_cpld_read);
+EXPORT_SYMBOL(adtran_8305cpld_read);
 
 int adtran_8305cpld_write(unsigned short cpld_addr, u8 reg, u8 value)
 {
@@ -520,7 +520,7 @@ int adtran_8305cpld_write(unsigned short cpld_addr, u8 reg, u8 value)
 
 	return ret;
 }
-EXPORT_SYMBOL(8305_cpld_write);
+EXPORT_SYMBOL(adtran_8305cpld_write);
 
 static const struct i2c_device_id adtran_8305cpld_id[] = {
     { "8305_cpld1", 0 },
@@ -550,8 +550,8 @@ static void __exit adtran_8305cpld_exit(void)
 	i2c_del_driver(&adtran_8305cpld_driver);
 }
 
-module_init(8305_cpld_init);
-module_exit(8305_cpld_exit);
+module_init(adtran_8305cpld_init);
+module_exit(adtran_8305cpld_exit);
 
 MODULE_AUTHOR("Brandon Chuang <brandon_chuang@accton.com.tw>");
 MODULE_DESCRIPTION("8305_cpld driver");

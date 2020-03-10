@@ -387,7 +387,7 @@ static struct adtran_8305psu_data *adtran_8305psu_update_device(struct device *d
         power_good = (data->status >> (3-data->index) & 0x1);
 
         if (power_good) {
-            if (8305_psu_model_name_get(dev) < 0) {
+            if (adtran_8305psu_model_name_get(dev) < 0) {
                 goto exit;
             }
 
@@ -437,8 +437,8 @@ static void __exit adtran_8305psu_exit(void)
     i2c_del_driver(&adtran_8305psu_driver);
 }
 
-module_init(8305_psu_init);
-module_exit(8305_psu_exit);
+module_init(adtran_8305psu_init);
+module_exit(adtran_8305psu_exit);
 
 MODULE_AUTHOR("Brandon Chuang <brandon_chuang@accton.com.tw>");
 MODULE_DESCRIPTION("8305_psu driver");
