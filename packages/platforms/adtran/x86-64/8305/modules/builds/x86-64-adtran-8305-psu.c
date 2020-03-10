@@ -41,8 +41,8 @@
 #define DC12V_FAN_DIR_LEN       3
 
 static ssize_t show_status(struct device *dev, struct device_attribute *da, char *buf);
-static int 8305_psu_read_block(struct i2c_client *client, u8 command, u8 *data,int data_len);
-extern int 8305_cpld_read (unsigned short cpld_addr, u8 reg);
+static int adtran_8305psu_read_block(struct i2c_client *client, u8 command, u8 *data,int data_len);
+extern int adtran_8305cpld_read (unsigned short cpld_addr, u8 reg);
 
 /* Addresses scanned 
  */
@@ -57,7 +57,7 @@ enum psu_type {
 
 /* Each client has this additional data 
  */
-struct 8305_psu_data {
+struct adtran_8305psu_data {
     struct device      *hwmon_dev;
     struct mutex        update_lock;
     char                valid;           /* !=0 if registers are valid */
@@ -71,9 +71,9 @@ struct 8305_psu_data {
 };
 
 static ssize_t show_string(struct device *dev, struct device_attribute *da, char *buf);
-static struct 8305_psu_data *8305_psu_update_device(struct device *dev);             
+static struct adtran_8305psu_data *adtran_8305psu_update_device(struct device *dev);             
 
-enum 8305_psu_sysfs_attributes {
+enum adtran_8305psu_sysfs_attributes {
     PSU_PRESENT,
     PSU_MODEL_NAME,
     PSU_SERIAL_NUMBER, /* For ACBEL PSU only */
@@ -89,7 +89,7 @@ static SENSOR_DEVICE_ATTR(psu_serial_number, S_IRUGO, show_string, NULL, PSU_SER
 static SENSOR_DEVICE_ATTR(psu_power_good, S_IRUGO, show_status, NULL, PSU_POWER_GOOD);
 static SENSOR_DEVICE_ATTR(psu_fan_dir,       S_IRUGO, show_string, NULL, PSU_FAN_DIR);
 
-static struct attribute *8305_psu_attributes[] = {
+static struct attribute *adtran_8305psu_attributes[] = {
     &sensor_dev_attr_psu_present.dev_attr.attr,
     &sensor_dev_attr_psu_model_name.dev_attr.attr,
     &sensor_dev_attr_psu_serial_number.dev_attr.attr,
@@ -102,7 +102,7 @@ static ssize_t show_status(struct device *dev, struct device_attribute *da,
              char *buf)
 {
     struct sensor_device_attribute *attr = to_sensor_dev_attr(da);
-    struct 8305_psu_data *data = 8305_psu_update_device(dev);
+    struct adtran_8305psu_data *data = adtran_8305psu_update_device(dev);
     u8 status = 0;
 
     if (!data->valid) {
@@ -123,7 +123,7 @@ static ssize_t show_string(struct device *dev, struct device_attribute *da,
              char *buf)
 {
     struct sensor_device_attribute *attr = to_sensor_dev_attr(da);
-    struct 8305_psu_data *data = 8305_psu_update_device(dev);
+    struct adtran_8305psu_data *data = adtran_8305psu_update_device(dev);
     char *ptr = NULL;
 
     if (!data->valid) {
@@ -147,14 +147,14 @@ static ssize_t show_string(struct device *dev, struct device_attribute *da,
     return sprintf(buf, "%s\n", ptr);
 }
 
-static const struct attribute_group 8305_psu_group = {
-    .attrs = 8305_psu_attributes,
+static const struct attribute_group adtran_8305psu_group = {
+    .attrs = adtran_8305psu_attributes,
 };
 
-static int 8305_psu_probe(struct i2c_client *client,
+static int adtran_8305psu_probe(struct i2c_client *client,
             const struct i2c_device_id *dev_id)
 {
-    struct 8305_psu_data *data;
+    struct adtran_8305psu_data *data;
     int status;
 
     if (!i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_I2C_BLOCK)) {
@@ -162,7 +162,7 @@ static int 8305_psu_probe(struct i2c_client *client,
         goto exit;
     }
 
-    data = kzalloc(sizeof(struct 8305_psu_data), GFP_KERNEL);
+    data = kzalloc(sizeof(struct adtran_8305psu_data), GFP_KERNEL);
     if (!data) {
         status = -ENOMEM;
         goto exit;
@@ -176,7 +176,7 @@ static int 8305_psu_probe(struct i2c_client *client,
     dev_info(&client->dev, "chip found\n");
 
     /* Register sysfs hooks */
-    status = sysfs_create_group(&client->dev.kobj, &8305_psu_group);
+    status = sysfs_create_group(&client->dev.kobj, &adtran_8305psu_group);
     if (status) {
         goto exit_free;
     }
@@ -194,7 +194,7 @@ static int 8305_psu_probe(struct i2c_client *client,
     return 0;
 
 exit_remove:
-    sysfs_remove_group(&client->dev.kobj, &8305_psu_group);
+    sysfs_remove_group(&client->dev.kobj, &adtran_8305psu_group);
 exit_free:
     kfree(data);
 exit:
@@ -202,12 +202,12 @@ exit:
     return status;
 }
 
-static int 8305_psu_remove(struct i2c_client *client)
+static int adtran_8305psu_remove(struct i2c_client *client)
 {
-    struct 8305_psu_data *data = i2c_get_clientdata(client);
+    struct adtran_8305psu_data *data = i2c_get_clientdata(client);
 
     hwmon_device_unregister(data->hwmon_dev);
-    sysfs_remove_group(&client->dev.kobj, &8305_psu_group);
+    sysfs_remove_group(&client->dev.kobj, &adtran_8305psu_group);
     kfree(data);
     
     return 0;
@@ -215,29 +215,29 @@ static int 8305_psu_remove(struct i2c_client *client)
 
 enum psu_index 
 { 
-    8305_psu1, 
-    8305_psu2
+    adtran_8305psu1, 
+    adtran_8305psu2
 };
 
-static const struct i2c_device_id 8305_psu_id[] = {
-    { "8305_psu1", 8305_psu1 },
-    { "8305_psu2", 8305_psu2 },
+static const struct i2c_device_id adtran_8305psu_id[] = {
+    { "8305_psu1", adtran_8305psu1 },
+    { "8305_psu2", adtran_8305psu2 },
     {}
 };
-MODULE_DEVICE_TABLE(i2c, 8305_psu_id);
+MODULE_DEVICE_TABLE(i2c, adtran_8305psu_id);
 
-static struct i2c_driver 8305_psu_driver = {
+static struct i2c_driver adtran_8305psu_driver = {
     .class        = I2C_CLASS_HWMON,
     .driver = {
         .name     = "8305_psu",
     },
-    .probe        = 8305_psu_probe,
-    .remove       = 8305_psu_remove,
-    .id_table     = 8305_psu_id,
+    .probe        = adtran_8305psu_probe,
+    .remove       = adtran_8305psu_remove,
+    .id_table     = adtran_8305psu_id,
     .address_list = normal_i2c,
 };
 
-static int 8305_psu_read_block(struct i2c_client *client, u8 command, u8 *data,
+static int adtran_8305psu_read_block(struct i2c_client *client, u8 command, u8 *data,
               int data_len)
 {
     int result = 0;
@@ -276,13 +276,13 @@ struct model_name_info {
 static int acbel_psu_serial_number_get(struct device *dev)
 {
     struct i2c_client *client = to_i2c_client(dev);
-    struct 8305_psu_data *data = i2c_get_clientdata(client);
+    struct adtran_8305psu_data *data = i2c_get_clientdata(client);
     int i, status;
 
     memset(data->serial_number, 0, sizeof(data->serial_number));
 
     /* Read from offset 0x2e ~ 0x3d (16 bytes) */
-    status = 8305_psu_read_block(client, 0x2e,data->serial_number, 16);
+    status = adtran_8305psu_read_block(client, 0x2e,data->serial_number, 16);
     if (status < 0) {
         data->serial_number[0] = '\0';
         dev_dbg(&client->dev, "unable to read model name from (0x%x) offset(0x2e)\n", client->addr);
@@ -290,7 +290,7 @@ static int acbel_psu_serial_number_get(struct device *dev)
     }
 
     /* Read from offset 0x4f ~ 0x50 (2 bytes) */
-    status = 8305_psu_read_block(client, 0x4f, data->serial_number + 16, 2);
+    status = adtran_8305psu_read_block(client, 0x4f, data->serial_number + 16, 2);
     if (status < 0) {
         data->serial_number[0] = '\0';
         dev_dbg(&client->dev, "unable to read model name from (0x%x) offset(0x4f)\n", client->addr);
@@ -307,16 +307,16 @@ struct model_name_info models[] = {
 {PSU_TYPE_AC_ACBEL_FSF019, 0x15, 7, "FSF019-"},
 };
 
-static int 8305_psu_model_name_get(struct device *dev)
+static int adtran_8305psu_model_name_get(struct device *dev)
 {
     struct i2c_client *client = to_i2c_client(dev);
-    struct 8305_psu_data *data = i2c_get_clientdata(client);
+    struct adtran_8305psu_data *data = i2c_get_clientdata(client);
     int i, status;
 
     for (i = 0; i < ARRAY_SIZE(models); i++) {
         memset(data->model_name, 0, sizeof(data->model_name));
 
-        status = 8305_psu_read_block(client, models[i].offset,
+        status = adtran_8305psu_read_block(client, models[i].offset,
                                            data->model_name, models[i].length);
         if (status < 0) {
             data->model_name[0] = '\0';
@@ -332,7 +332,7 @@ static int 8305_psu_model_name_get(struct device *dev)
         if (strncmp(data->model_name, "FSF019-", 7) == 0) {
             char buf[5] = {0};
             
-            status = 8305_psu_read_block(client, 0x48, data->model_name + models[i].length, 4);
+            status = adtran_8305psu_read_block(client, 0x48, data->model_name + models[i].length, 4);
             if (status < 0) {
                 data->model_name[0] = '\0';
                 dev_dbg(&client->dev, "unable to read model name from (0x%x) offset(0x48)\n", client->addr);
@@ -355,10 +355,10 @@ static int 8305_psu_model_name_get(struct device *dev)
     return -ENODATA;
 }
 
-static struct 8305_psu_data *8305_psu_update_device(struct device *dev)
+static struct adtran_8305psu_data *adtran_8305psu_update_device(struct device *dev)
 {
     struct i2c_client *client = to_i2c_client(dev);
-    struct 8305_psu_data *data = i2c_get_clientdata(client);
+    struct adtran_8305psu_data *data = i2c_get_clientdata(client);
     
     mutex_lock(&data->update_lock);
 
@@ -371,7 +371,7 @@ static struct 8305_psu_data *8305_psu_update_device(struct device *dev)
         dev_dbg(&client->dev, "Starting 8305 update\n");
 
         /* Read psu status */
-        status = 8305_cpld_read(0x60, 0x2);
+        status = adtran_8305cpld_read(0x60, 0x2);
         
         if (status < 0) {
             dev_dbg(&client->dev, "cpld reg 0x60 err %d\n", status);
@@ -395,7 +395,7 @@ static struct 8305_psu_data *8305_psu_update_device(struct device *dev)
                         models[PSU_TYPE_DC_12V].model_name,
                         models[PSU_TYPE_DC_12V].length) == 0) {
                 /* Read fan direction */
-                status = 8305_psu_read_block(client, DC12V_FAN_DIR_OFFSET, 
+                status = adtran_8305psu_read_block(client, DC12V_FAN_DIR_OFFSET, 
                                                    data->fan_dir, DC12V_FAN_DIR_LEN);
 
                 if (status < 0) {
@@ -422,19 +422,19 @@ exit:
     return data;
 }
 
-static int __init 8305_psu_init(void)
+static int __init adtran_8305psu_init(void)
 {
     extern int platform_adtran_8305(void);
     if (!platform_adtran_8305()) {
         return -ENODEV;
     }
 
-    return i2c_add_driver(&8305_psu_driver);
+    return i2c_add_driver(&adtran_8305psu_driver);
 }
 
-static void __exit 8305_psu_exit(void)
+static void __exit adtran_8305psu_exit(void)
 {
-    i2c_del_driver(&8305_psu_driver);
+    i2c_del_driver(&adtran_8305psu_driver);
 }
 
 module_init(8305_psu_init);

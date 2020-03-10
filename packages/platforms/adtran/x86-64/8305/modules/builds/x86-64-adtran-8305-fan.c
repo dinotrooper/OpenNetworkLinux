@@ -32,7 +32,7 @@
 
 #define DRVNAME "8305_fan"
 
-static struct 8305_fan_data *8305_fan_update_device(struct device *dev);                    
+static struct adtran_8305fan_data *adtran_8305fan_update_device(struct device *dev);                    
 static ssize_t fan_show_value(struct device *dev, struct device_attribute *da, char *buf);
 static ssize_t set_duty_cycle(struct device *dev, struct device_attribute *da,
             const char *buf, size_t count);
@@ -60,7 +60,7 @@ static const u8 fan_reg[] = {
 };
 
 /* Each client has this additional data */
-struct 8305_fan_data {
+struct adtran_8305fan_data {
     struct device   *hwmon_dev;
     struct mutex     update_lock;
     char             valid;           /* != 0 if registers are valid */
@@ -168,7 +168,7 @@ DECLARE_FAN_DIRECTION_SENSOR_DEV_ATTR(6);
 /* 1 fan duty cycle attribute in this platform */
 DECLARE_FAN_DUTY_CYCLE_SENSOR_DEV_ATTR();
 
-static struct attribute *8305_fan_attributes[] = {
+static struct attribute *adtran_8305fan_attributes[] = {
     /* fan related attributes */
     DECLARE_FAN_FAULT_ATTR(1),
     DECLARE_FAN_FAULT_ATTR(2),
@@ -202,12 +202,12 @@ static struct attribute *8305_fan_attributes[] = {
 #define FAN_MAX_DUTY_CYCLE              100
 #define FAN_REG_VAL_TO_SPEED_RPM_STEP   100
 
-static int 8305_fan_read_value(struct i2c_client *client, u8 reg)
+static int adtran_8305fan_read_value(struct i2c_client *client, u8 reg)
 {
     return i2c_smbus_read_byte_data(client, reg);
 }
 
-static int 8305_fan_write_value(struct i2c_client *client, u8 reg, u8 value)
+static int adtran_8305fan_write_value(struct i2c_client *client, u8 reg, u8 value)
 {
     return i2c_smbus_write_byte_data(client, reg, value);
 }
@@ -247,7 +247,7 @@ static u8 reg_val_to_is_present(u8 reg_val, enum fan_id id)
     return reg_val ? 0 : 1;
 }
 
-static u8 is_fan_fault(struct 8305_fan_data *data, enum fan_id id)
+static u8 is_fan_fault(struct adtran_8305fan_data *data, enum fan_id id)
 {
     u8 ret = 1;
     int front_fan_index = FAN1_FRONT_SPEED_RPM + id;
@@ -276,8 +276,8 @@ static ssize_t set_duty_cycle(struct device *dev, struct device_attribute *da,
     if (value < 0 || value > FAN_MAX_DUTY_CYCLE)
         return -EINVAL;
 
-    8305_fan_write_value(client, 0x33, 0); /* Disable fan speed watch dog */
-    8305_fan_write_value(client, fan_reg[FAN_DUTY_CYCLE_PERCENTAGE], duty_cycle_to_reg_val(value));
+    adtran_8305fan_write_value(client, 0x33, 0); /* Disable fan speed watch dog */
+    adtran_8305fan_write_value(client, fan_reg[FAN_DUTY_CYCLE_PERCENTAGE], duty_cycle_to_reg_val(value));
     return count;
 }
 
@@ -285,7 +285,7 @@ static ssize_t fan_show_value(struct device *dev, struct device_attribute *da,
              char *buf)
 {
     struct sensor_device_attribute *attr = to_sensor_dev_attr(da);
-    struct 8305_fan_data *data = 8305_fan_update_device(dev);
+    struct adtran_8305fan_data *data = adtran_8305fan_update_device(dev);
     ssize_t ret = 0;
     
     if (data->valid) {
@@ -346,14 +346,14 @@ static ssize_t fan_show_value(struct device *dev, struct device_attribute *da,
     return ret;
 }
 
-static const struct attribute_group 8305_fan_group = {
-    .attrs = 8305_fan_attributes,
+static const struct attribute_group adtran_8305fan_group = {
+    .attrs = adtran_8305fan_attributes,
 };
 
-static struct 8305_fan_data *8305_fan_update_device(struct device *dev)
+static struct adtran_8305fan_data *adtran_8305fan_update_device(struct device *dev)
 {
     struct i2c_client *client = to_i2c_client(dev);
-    struct 8305_fan_data *data = i2c_get_clientdata(client);
+    struct adtran_8305fan_data *data = i2c_get_clientdata(client);
 
     mutex_lock(&data->update_lock);
 
@@ -361,13 +361,13 @@ static struct 8305_fan_data *8305_fan_update_device(struct device *dev)
         !data->valid) {
         int i;
 
-        dev_dbg(&client->dev, "Starting 8305_fan update\n");
+        dev_dbg(&client->dev, "Starting adtran_8305fan update\n");
         data->valid = 0;
         
         /* Update fan data
          */
         for (i = 0; i < ARRAY_SIZE(data->reg_val); i++) {
-            int status = 8305_fan_read_value(client, fan_reg[i]);
+            int status = adtran_8305fan_read_value(client, fan_reg[i]);
             
             if (status < 0) {
                 data->valid = 0;
@@ -389,10 +389,10 @@ static struct 8305_fan_data *8305_fan_update_device(struct device *dev)
     return data;
 }
 
-static int 8305_fan_probe(struct i2c_client *client,
+static int adtran_8305fan_probe(struct i2c_client *client,
             const struct i2c_device_id *dev_id)
 {
-    struct 8305_fan_data *data;
+    struct adtran_8305fan_data *data;
     int status;
 
     if (!i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_BYTE_DATA)) {
@@ -400,7 +400,7 @@ static int 8305_fan_probe(struct i2c_client *client,
         goto exit;
     }
 
-    data = kzalloc(sizeof(struct 8305_fan_data), GFP_KERNEL);
+    data = kzalloc(sizeof(struct adtran_8305fan_data), GFP_KERNEL);
     if (!data) {
         status = -ENOMEM;
         goto exit;
@@ -413,7 +413,7 @@ static int 8305_fan_probe(struct i2c_client *client,
     dev_info(&client->dev, "chip found\n");
 
     /* Register sysfs hooks */
-    status = sysfs_create_group(&client->dev.kobj, &8305_fan_group);
+    status = sysfs_create_group(&client->dev.kobj, &adtran_8305fan_group);
     if (status) {
         goto exit_free;
     }
@@ -431,7 +431,7 @@ static int 8305_fan_probe(struct i2c_client *client,
     return 0;
 
 exit_remove:
-    sysfs_remove_group(&client->dev.kobj, &8305_fan_group);
+    sysfs_remove_group(&client->dev.kobj, &adtran_8305fan_group);
 exit_free:
     kfree(data);
 exit:
@@ -439,11 +439,11 @@ exit:
     return status;
 }
 
-static int 8305_fan_remove(struct i2c_client *client)
+static int adtran_8305fan_remove(struct i2c_client *client)
 {
-    struct 8305_fan_data *data = i2c_get_clientdata(client);
+    struct adtran_8305fan_data *data = i2c_get_clientdata(client);
     hwmon_device_unregister(data->hwmon_dev);
-    sysfs_remove_group(&client->dev.kobj, &8305_fan_group);
+    sysfs_remove_group(&client->dev.kobj, &adtran_8305fan_group);
     
     return 0;
 }
@@ -451,36 +451,36 @@ static int 8305_fan_remove(struct i2c_client *client)
 /* Addresses to scan */
 static const unsigned short normal_i2c[] = { 0x66, I2C_CLIENT_END };
 
-static const struct i2c_device_id 8305_fan_id[] = {
+static const struct i2c_device_id adtran_8305fan_id[] = {
     { "8305_fan", 0 },
     {}
 };
-MODULE_DEVICE_TABLE(i2c, 8305_fan_id);
+MODULE_DEVICE_TABLE(i2c, adtran_8305fan_id);
 
-static struct i2c_driver 8305_fan_driver = {
+static struct i2c_driver adtran_8305fan_driver = {
     .class        = I2C_CLASS_HWMON,
     .driver = {
         .name     = DRVNAME,
     },
-    .probe        = 8305_fan_probe,
-    .remove       = 8305_fan_remove,
-    .id_table     = 8305_fan_id,
+    .probe        = adtran_8305fan_probe,
+    .remove       = adtran_8305fan_remove,
+    .id_table     = adtran_8305fan_id,
     .address_list = normal_i2c,
 };
 
-static int __init 8305_fan_init(void)
+static int __init adtran_8305fan_init(void)
 {
     extern int platform_adtran_8305(void);
     if (!platform_adtran_8305()) {
         return -ENODEV;
     }
 
-    return i2c_add_driver(&8305_fan_driver);
+    return i2c_add_driver(&adtran_8305fan_driver);
 }
 
-static void __exit 8305_fan_exit(void)
+static void __exit adtran_8305fan_exit(void)
 {
-    i2c_del_driver(&8305_fan_driver);
+    i2c_del_driver(&adtran_8305fan_driver);
 }
 
 module_init(8305_fan_init);

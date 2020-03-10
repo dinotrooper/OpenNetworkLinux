@@ -34,7 +34,7 @@ def extractKey(platform, arch, key):
 
     pkg = "onl-platform-config-%s:%s" % (platform, arch,)
     basename = "%s.yml" % platform
-    pm.require(pkg, force=False, build_missing=True)
+    pm.require(pkg, force=False, build_missing=False)
     platformConfigPath = pm.opr.get_file(pkg, basename)
 
     if arch in ('amd64',):
@@ -45,7 +45,7 @@ def extractKey(platform, arch, key):
         pkg = "onl-vendor-config-onl:all"
         basename = "platform-config-defaults-uboot.yml"
         subkey = 'flat_image_tree'
-    pm.require(pkg, force=False, build_missing=True)
+    pm.require(pkg, force=False, build_missing=False)
     defaultConfigPath = pm.opr.get_file(pkg, basename)
 
     platformConf = onl.YamlUtils.merge(defaultConfigPath, platformConfigPath)
@@ -59,7 +59,7 @@ def extractKey(platform, arch, key):
             raise ValueError("resource missing package declaration: %s" % resource)
         pkg = pkg.strip()
         basename = basename.strip()
-    pm.require(pkg, force=False, build_missing=True)
+    pm.require(pkg, force=False, build_missing=False)
     resourcePath = pm.opr.get_file(pkg, basename)
     return resourcePath
 

@@ -1,5 +1,5 @@
 /*
- * A hwmon driver for the 8305_cpld
+ * A hwmon driver for the adtran_8305cpld
  *
  * Copyright (C) 2013 Accton Technology Corporation.
  * Brandon Chuang <brandon_chuang@accton.com.tw>
@@ -53,21 +53,21 @@ static ssize_t access(struct device *dev, struct device_attribute *da,
 			const char *buf, size_t count);
 static ssize_t show_version(struct device *dev, struct device_attribute *da,
              char *buf);
-static int 8305_cpld_read_internal(struct i2c_client *client, u8 reg);
-static int 8305_cpld_write_internal(struct i2c_client *client, u8 reg, u8 value);
+static int adtran_8305cpld_read_internal(struct i2c_client *client, u8 reg);
+static int adtran_8305cpld_write_internal(struct i2c_client *client, u8 reg, u8 value);
 
-struct 8305_cpld_data {
+struct adtran_8305cpld_data {
     struct device      *hwmon_dev;
     struct mutex        update_lock;
 };
 
-/* Addresses scanned for 8305_cpld
+/* Addresses scanned for adtran_8305cpld
  */
 static const unsigned short normal_i2c[] = { I2C_CLIENT_END };
 
 #define TRANSCEIVER_PRESENT_ATTR_ID(index)   MODULE_PRESENT_##index
 
-enum 8305_cpld_sysfs_attributes {
+enum adtran_8305cpld_sysfs_attributes {
 	CPLD_VERSION,
 	ACCESS,
 	MODULE_PRESENT_ALL,
@@ -151,7 +151,7 @@ DECLARE_TRANSCEIVER_SENSOR_DEVICE_ATTR(30);
 DECLARE_TRANSCEIVER_SENSOR_DEVICE_ATTR(31);
 DECLARE_TRANSCEIVER_SENSOR_DEVICE_ATTR(32);
 
-static struct attribute *8305_cpld_attributes[] = {
+static struct attribute *adtran_8305cpld_attributes[] = {
     &sensor_dev_attr_version.dev_attr.attr,
     &sensor_dev_attr_access.dev_attr.attr,
 	/* transceiver attributes */
@@ -191,8 +191,8 @@ static struct attribute *8305_cpld_attributes[] = {
 	NULL
 };
 
-static const struct attribute_group 8305_cpld_group = {
-	.attrs = 8305_cpld_attributes,
+static const struct attribute_group adtran_8305cpld_group = {
+	.attrs = adtran_8305cpld_attributes,
 };
 
 static ssize_t show_present_all(struct device *dev, struct device_attribute *da,
@@ -202,12 +202,12 @@ static ssize_t show_present_all(struct device *dev, struct device_attribute *da,
 	u8 values[4]  = {0};
 	u8 regs[] = {0x30, 0x31, 0x32, 0x33};
 	struct i2c_client *client = to_i2c_client(dev);
-	struct 8305_cpld_data *data = i2c_get_clientdata(client);
+	struct adtran_8305cpld_data *data = i2c_get_clientdata(client);
 
 	mutex_lock(&data->update_lock);
 
     for (i = 0; i < ARRAY_SIZE(regs); i++) {
-        status = 8305_cpld_read_internal(client, regs[i]);
+        status = adtran_8305cpld_read_internal(client, regs[i]);
         
         if (status < 0) {
             goto exit;
@@ -233,7 +233,7 @@ static ssize_t show_present(struct device *dev, struct device_attribute *da,
 {
     struct sensor_device_attribute *attr = to_sensor_dev_attr(da);
     struct i2c_client *client = to_i2c_client(dev);
-    struct 8305_cpld_data *data = i2c_get_clientdata(client);
+    struct adtran_8305cpld_data *data = i2c_get_clientdata(client);
 	int status = 0;
 	u8 reg = 0, mask = 0;
 
@@ -260,7 +260,7 @@ static ssize_t show_present(struct device *dev, struct device_attribute *da,
 
 
     mutex_lock(&data->update_lock);
-	status = 8305_cpld_read_internal(client, reg);
+	status = adtran_8305cpld_read_internal(client, reg);
 	if (unlikely(status < 0)) {
 		goto exit;
 	}
@@ -279,7 +279,7 @@ static ssize_t show_version(struct device *dev, struct device_attribute *da,
 	u8 reg = 0, mask = 0;
     struct sensor_device_attribute *attr = to_sensor_dev_attr(da);
     struct i2c_client *client = to_i2c_client(dev);
-    struct 8305_cpld_data *data = i2c_get_clientdata(client);
+    struct adtran_8305cpld_data *data = i2c_get_clientdata(client);
 	int status = 0;
 
 	switch (attr->index) {
@@ -292,7 +292,7 @@ static ssize_t show_version(struct device *dev, struct device_attribute *da,
 	}
 
     mutex_lock(&data->update_lock);
-	status = 8305_cpld_read_internal(client, reg);
+	status = adtran_8305cpld_read_internal(client, reg);
 	if (unlikely(status < 0)) {
 		goto exit;
 	}
@@ -310,7 +310,7 @@ static ssize_t access(struct device *dev, struct device_attribute *da,
 	int status;
 	u32 addr, val;
     struct i2c_client *client = to_i2c_client(dev);
-    struct 8305_cpld_data *data = i2c_get_clientdata(client);
+    struct adtran_8305cpld_data *data = i2c_get_clientdata(client);
 
 	if (sscanf(buf, "0x%x 0x%x", &addr, &val) != 2) {
 		return -EINVAL;
@@ -321,7 +321,7 @@ static ssize_t access(struct device *dev, struct device_attribute *da,
 	}
 
 	mutex_lock(&data->update_lock);
-	status = 8305_cpld_write_internal(client, addr, val);
+	status = adtran_8305cpld_write_internal(client, addr, val);
 	if (unlikely(status < 0)) {
 		goto exit;
 	}
@@ -333,7 +333,7 @@ exit:
 	return status;
 }
 
-static int 8305_cpld_read_internal(struct i2c_client *client, u8 reg)
+static int adtran_8305cpld_read_internal(struct i2c_client *client, u8 reg)
 {
 	int status = 0, retry = I2C_RW_RETRY_COUNT;
 
@@ -351,7 +351,7 @@ static int 8305_cpld_read_internal(struct i2c_client *client, u8 reg)
     return status;
 }
 
-static int 8305_cpld_write_internal(struct i2c_client *client, u8 reg, u8 value)
+static int adtran_8305cpld_write_internal(struct i2c_client *client, u8 reg, u8 value)
 {
 	int status = 0, retry = I2C_RW_RETRY_COUNT;
 
@@ -369,7 +369,7 @@ static int 8305_cpld_write_internal(struct i2c_client *client, u8 reg, u8 value)
     return status;
 }
 
-static void 8305_cpld_add_client(struct i2c_client *client)
+static void adtran_8305cpld_add_client(struct i2c_client *client)
 {
 	struct cpld_client_node *node = kzalloc(sizeof(struct cpld_client_node), GFP_KERNEL);
 	
@@ -385,7 +385,7 @@ static void 8305_cpld_add_client(struct i2c_client *client)
 	mutex_unlock(&list_lock);
 }
 
-static void 8305_cpld_remove_client(struct i2c_client *client)
+static void adtran_8305cpld_remove_client(struct i2c_client *client)
 {
 	struct list_head		*list_node = NULL;
 	struct cpld_client_node *cpld_node = NULL;
@@ -411,11 +411,11 @@ static void 8305_cpld_remove_client(struct i2c_client *client)
 	mutex_unlock(&list_lock);
 }
 
-static int 8305_cpld_probe(struct i2c_client *client,
+static int adtran_8305cpld_probe(struct i2c_client *client,
             const struct i2c_device_id *dev_id)
 {
     int status;
-	struct 8305_cpld_data *data = NULL;
+	struct adtran_8305cpld_data *data = NULL;
 
     if (!i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_BYTE_DATA)) {
         dev_dbg(&client->dev, "i2c_check_functionality failed (0x%x)\n", client->addr);
@@ -423,7 +423,7 @@ static int 8305_cpld_probe(struct i2c_client *client,
         goto exit;
     }
 
-    data = kzalloc(sizeof(struct 8305_cpld_data), GFP_KERNEL);
+    data = kzalloc(sizeof(struct adtran_8305cpld_data), GFP_KERNEL);
     if (!data) {
         status = -ENOMEM;
         goto exit;
@@ -434,7 +434,7 @@ static int 8305_cpld_probe(struct i2c_client *client,
     dev_info(&client->dev, "chip found\n");
 
 	/* Register sysfs hooks */
-	status = sysfs_create_group(&client->dev.kobj, &8305_cpld_group);
+	status = sysfs_create_group(&client->dev.kobj, &adtran_8305cpld_group);
 	if (status) {
 		goto exit_free;
 	}
@@ -454,7 +454,7 @@ static int 8305_cpld_probe(struct i2c_client *client,
     return 0;
 
 exit_remove:
-    sysfs_remove_group(&client->dev.kobj, &8305_cpld_group);
+    sysfs_remove_group(&client->dev.kobj, &adtran_8305cpld_group);
 exit_free:
     kfree(data);
 exit:
@@ -462,19 +462,19 @@ exit:
     return status;
 }
 
-static int 8305_cpld_remove(struct i2c_client *client)
+static int adtran_8305cpld_remove(struct i2c_client *client)
 {
-    struct 8305_cpld_data *data = i2c_get_clientdata(client);
+    struct adtran_8305cpld_data *data = i2c_get_clientdata(client);
 
     hwmon_device_unregister(data->hwmon_dev);
-    sysfs_remove_group(&client->dev.kobj, &8305_cpld_group);
+    sysfs_remove_group(&client->dev.kobj, &adtran_8305cpld_group);
     kfree(data);
 	8305_cpld_remove_client(client);
 
     return 0;
 }
 
-int 8305_cpld_read(unsigned short cpld_addr, u8 reg)
+int adtran_8305cpld_read(unsigned short cpld_addr, u8 reg)
 {
 	struct list_head   *list_node = NULL;
 	struct cpld_client_node *cpld_node = NULL;
@@ -498,7 +498,7 @@ int 8305_cpld_read(unsigned short cpld_addr, u8 reg)
 }
 EXPORT_SYMBOL(8305_cpld_read);
 
-int 8305_cpld_write(unsigned short cpld_addr, u8 reg, u8 value)
+int adtran_8305cpld_write(unsigned short cpld_addr, u8 reg, u8 value)
 {
 	struct list_head   *list_node = NULL;
 	struct cpld_client_node *cpld_node = NULL;
@@ -522,32 +522,32 @@ int 8305_cpld_write(unsigned short cpld_addr, u8 reg, u8 value)
 }
 EXPORT_SYMBOL(8305_cpld_write);
 
-static const struct i2c_device_id 8305_cpld_id[] = {
+static const struct i2c_device_id adtran_8305cpld_id[] = {
     { "8305_cpld1", 0 },
     {}
 };
-MODULE_DEVICE_TABLE(i2c, 8305_cpld_id);
+MODULE_DEVICE_TABLE(i2c, adtran_8305cpld_id);
 
-static struct i2c_driver 8305_cpld_driver = {
+static struct i2c_driver adtran_8305cpld_driver = {
     .class        = I2C_CLASS_HWMON,
     .driver = {
         .name     = "8305_cpld1",
     },
-    .probe        = 8305_cpld_probe,
-    .remove       = 8305_cpld_remove,
-    .id_table     = 8305_cpld_id,
+    .probe        = adtran_8305cpld_probe,
+    .remove       = adtran_8305cpld_remove,
+    .id_table     = adtran_8305cpld_id,
     .address_list = normal_i2c,
 };
 
-static int __init 8305_cpld_init(void)
+static int __init adtran_8305cpld_init(void)
 {
 	mutex_init(&list_lock);
-	return i2c_add_driver(&8305_cpld_driver);
+	return i2c_add_driver(&adtran_8305cpld_driver);
 }
 
-static void __exit 8305_cpld_exit(void)
+static void __exit adtran_8305cpld_exit(void)
 {
-	i2c_del_driver(&8305_cpld_driver);
+	i2c_del_driver(&adtran_8305cpld_driver);
 }
 
 module_init(8305_cpld_init);

@@ -30,8 +30,8 @@
 #include <linux/slab.h>
 #include <linux/dmi.h>
 
-extern int 8305_cpld_read (unsigned short cpld_addr, u8 reg);
-extern int 8305_cpld_write(unsigned short cpld_addr, u8 reg, u8 value);
+extern int adtran_8305cpld_read (unsigned short cpld_addr, u8 reg);
+extern int adtran_8305cpld_write(unsigned short cpld_addr, u8 reg, u8 value);
 
 #define DRVNAME "adtran_8305_led"
 
@@ -170,12 +170,12 @@ static u8 led_light_mode_to_reg_val(enum led_type type,
 
 static int adtran_8305_led_read_value(u8 reg)
 {
-	return 8305_cpld_read(LED_CNTRLER_I2C_ADDRESS, reg);
+	return adtran_8305cpld_read(LED_CNTRLER_I2C_ADDRESS, reg);
 }
 
 static int adtran_8305_led_write_value(u8 reg, u8 value)
 {
-	return 8305_cpld_write(LED_CNTRLER_I2C_ADDRESS, reg, value);
+	return adtran_8305cpld_write(LED_CNTRLER_I2C_ADDRESS, reg, value);
 }
 
 static void adtran_8305_led_update(void)
