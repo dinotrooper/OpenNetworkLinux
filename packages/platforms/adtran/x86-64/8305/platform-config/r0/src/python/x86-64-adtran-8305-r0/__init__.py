@@ -5,7 +5,7 @@ class OnlPlatform_x86_64_adtran_8305_r0(OnlPlatformAdtran,
                                               OnlPlatformPortConfig_32x100):
     PLATFORM='x86-64-adtran-8305-r0'
     MODEL="ADTRAN-8305"
-    SYS_OBJECT_ID=".7712.32"
+    SYS_OBJECT_ID=".8305"
 
     def baseconfig(self):
         self.insmod('optoe')
