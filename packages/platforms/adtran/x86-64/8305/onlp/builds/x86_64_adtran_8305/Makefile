@@ -4,6 +4,6 @@
 #
 ###############################################################################
 include $(ONL)/make/config.mk
-MODULE := x86_64_adtran_8305
-AUTOMODULE := x86_64_adtran_8305
+MODULE := x86_64_adtran_8305_r0
+AUTOMODULE := x86_64_adtran_8305_r0
 include $(BUILDER)/definemodule.mk
