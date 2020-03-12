@@ -22,7 +22,6 @@ x86-64-adtran-8305-r0:
 
     args: >-
       nopat
-      console=ttyS1,115200n8
 
   ##network
   ##  interfaces:
