@@ -36,8 +36,8 @@ static struct adtran_8305fan_data *adtran_8305fan_update_device(struct device *d
 static ssize_t fan_show_value(struct device *dev, struct device_attribute *da, char *buf);
 static ssize_t set_duty_cycle(struct device *dev, struct device_attribute *da,
             const char *buf, size_t count);
-extern int accton_i2c_cpld_read(unsigned short cpld_addr, u8 reg);
-extern int accton_i2c_cpld_write(unsigned short cpld_addr, u8 reg, u8 value);
+extern int adtran_i2c_cpld_read(unsigned short cpld_addr, u8 reg);
+extern int adtran_i2c_cpld_write(unsigned short cpld_addr, u8 reg, u8 value);
 
 /* fan related data, the index should match sysfs_fan_attributes
  */
