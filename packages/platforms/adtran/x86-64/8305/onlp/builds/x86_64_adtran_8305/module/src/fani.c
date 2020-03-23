@@ -177,7 +177,7 @@ _onlp_fani_info_get_fan(int local_id, onlp_fan_info_t* info)
     /* check if fan is present
      */
     sprintf(fullpath, "%s%s", PREFIX_PATH_ON_MAIN_BOARD, fan_path[local_id].present);
-    OPEN_READ_FILE(fd,fullpath,r_data,nbytes,len);
+    //OPEN_READ_FILE(fd,fullpath,r_data,nbytes,len);
     if (atoi(r_data) == 0) {
         return ONLP_STATUS_OK;
     }
@@ -186,7 +186,7 @@ _onlp_fani_info_get_fan(int local_id, onlp_fan_info_t* info)
     /* get fan fault status (turn on when any one fails)
      */
     sprintf(fullpath, "%s%s", PREFIX_PATH_ON_MAIN_BOARD, fan_path[local_id].status);
-    OPEN_READ_FILE(fd,fullpath,r_data,nbytes,len);
+    //OPEN_READ_FILE(fd,fullpath,r_data,nbytes,len);
     if (atoi(r_data) > 0) {
         info->status |= ONLP_FAN_STATUS_FAILED;
         return ONLP_STATUS_OK;
@@ -195,7 +195,7 @@ _onlp_fani_info_get_fan(int local_id, onlp_fan_info_t* info)
     /* get fan/fanr direction (both : the same)
      */
     sprintf(fullpath, "%s%s", PREFIX_PATH_ON_MAIN_BOARD, fan_path[local_id].direction);
-    OPEN_READ_FILE(fd,fullpath,r_data,nbytes,len);
+    //OPEN_READ_FILE(fd,fullpath,r_data,nbytes,len);
 
     if (atoi(r_data) == 0) /*B2F*/
         info->status |= ONLP_FAN_STATUS_B2F;
@@ -205,11 +205,11 @@ _onlp_fani_info_get_fan(int local_id, onlp_fan_info_t* info)
     /* get fan speed (take the min from two speeds)
      */
     sprintf(fullpath, "%s%s", PREFIX_PATH_ON_MAIN_BOARD, fan_path[local_id].speed);
-    OPEN_READ_FILE(fd,fullpath,r_data,nbytes,len);
+    //OPEN_READ_FILE(fd,fullpath,r_data,nbytes,len);
     info->rpm = atoi(r_data);
 
     sprintf(fullpath, "%s%s", PREFIX_PATH_ON_MAIN_BOARD, fan_path[local_id].r_speed);
-    OPEN_READ_FILE(fd,fullpath,r_data,nbytes,len);
+    //OPEN_READ_FILE(fd,fullpath,r_data,nbytes,len);
     if (info->rpm > atoi(r_data)) {
         info->rpm = atoi(r_data);
     }
