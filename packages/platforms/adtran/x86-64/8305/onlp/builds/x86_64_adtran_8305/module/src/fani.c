@@ -112,7 +112,6 @@ _onlp_fani_info_get_fan(int local_id, onlp_fan_info_t* info)
 
     /* check if fan is present
      */
-    sprintf(fullpath, "%s%s", PREFIX_PATH_ON_MAIN_BOARD, fan_path[local_id].present);
     //OPEN_READ_FILE(fd,fullpath,r_data,nbytes,len);
     r_data = '1';
     if (atoi(r_data) == 0) {
@@ -129,9 +128,9 @@ _onlp_fani_info_get_fan(int local_id, onlp_fan_info_t* info)
         return ONLP_STATUS_OK;
     }
 
-    /* get fan/fanr direction (both : the same)
+    /* get fan/fanr direction (both : the same) -- so far no direction file present in speculated 8305 sys fs --
      */
-    sprintf(fullpath, "%s%s", PREFIX_PATH_ON_MAIN_BOARD, fan_path[local_id].direction);
+    //sprintf(fullpath, "%s%s", PREFIX_PATH_ON_MAIN_BOARD, fan_path[local_id].direction);
     //OPEN_READ_FILE(fd,fullpath,r_data,nbytes,len);
 
     if (atoi(r_data) == 0) /*B2F*/
@@ -146,7 +145,8 @@ _onlp_fani_info_get_fan(int local_id, onlp_fan_info_t* info)
     r_data = '18'
     info->rpm = atoi(r_data);
 
-    sprintf(fullpath, "%s%s", PREFIX_PATH_ON_MAIN_BOARD, fan_path[local_id].r_speed);
+    // Commented out because there is no r_speed file in the speculated 8305 sys fs
+    // sprintf(fullpath, "%s%s", PREFIX_PATH_ON_MAIN_BOARD, fan_path[local_id].r_speed);
     //OPEN_READ_FILE(fd,fullpath,r_data,nbytes,len);
     if (info->rpm > atoi(r_data)) {
         info->rpm = atoi(r_data);
