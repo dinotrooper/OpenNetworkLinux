@@ -29,7 +29,7 @@
 #include <limits.h>
 #include "platform_lib.h"
 
-#define PREFIX_PATH_ON_MAIN_BOARD   "/sys/bus/i2c/devices/2-0066/"
+#define PREFIX_PATH_ON_MAIN_BOARD   "/sys/hwmon/hwmon2/"
 
 #define MAX_FAN_SPEED     18000
 
@@ -44,17 +44,15 @@
 
 typedef struct fan_path_S
 {
-    char present[LEN_FILE_NAME];
     char status[LEN_FILE_NAME];
+    char percentage[LEN_FILE_NAME];
     char speed[LEN_FILE_NAME];
-	char direction[LEN_FILE_NAME];
-    char ctrl_speed[LEN_FILE_NAME];
-    char r_speed[LEN_FILE_NAME];
+    char label[LEN_FILE_NAME];
 }fan_path_T;
 
 #define _MAKE_FAN_PATH_ON_MAIN_BOARD(prj,id) \
-    { #prj"fan"#id"_present", #prj"fan"#id"_fault", #prj"fan"#id"_front_speed_rpm", \
-      #prj"fan"#id"_direction", #prj"fan_duty_cycle_percentage", #prj"fan"#id"_rear_speed_rpm" }
+    { #prj"fan"#id"_status", #prj"fan"#id"_percentage", #prj"fan"#id"_speed", \
+      #prj"fan"#id"_label"}
 
 #define MAKE_FAN_PATH_ON_MAIN_BOARD(prj,id) _MAKE_FAN_PATH_ON_MAIN_BOARD(prj,id)
 
@@ -69,7 +67,7 @@ static fan_path_T fan_path[] =  /* must map with onlp_fan_id */
 
 #define MAKE_FAN_INFO_NODE_ON_MAIN_BOARD(id) \
     { \
-        { ONLP_FAN_ID_CREATE(FAN_##id##_ON_MAIN_BOARD), "Chassis Fan "#id, 0 }, \
+        { ONLP_FAN_ID_CREATE(FAN_##id##_ON_MAIN_BOARD), "8305-Chassis Fan "#id, 0 }, \
         0x0, \
         (ONLP_FAN_CAPS_SET_PERCENTAGE | ONLP_FAN_CAPS_GET_RPM | ONLP_FAN_CAPS_GET_PERCENTAGE), \
         0, \
