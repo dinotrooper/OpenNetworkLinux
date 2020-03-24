@@ -41,8 +41,6 @@
 #define FAN_2_ON_MAIN_BOARD	2
 #define FAN_3_ON_MAIN_BOARD	3
 #define FAN_4_ON_MAIN_BOARD	4
-#define FAN_5_ON_MAIN_BOARD	5
-#define FAN_6_ON_MAIN_BOARD	6
 
 typedef struct fan_path_S
 {
@@ -67,8 +65,6 @@ static fan_path_T fan_path[] =  /* must map with onlp_fan_id */
     MAKE_FAN_PATH_ON_MAIN_BOARD(PROJECT_NAME, FAN_2_ON_MAIN_BOARD),
     MAKE_FAN_PATH_ON_MAIN_BOARD(PROJECT_NAME, FAN_3_ON_MAIN_BOARD),
     MAKE_FAN_PATH_ON_MAIN_BOARD(PROJECT_NAME, FAN_4_ON_MAIN_BOARD),
-    MAKE_FAN_PATH_ON_MAIN_BOARD(PROJECT_NAME, FAN_5_ON_MAIN_BOARD),
-    MAKE_FAN_PATH_ON_MAIN_BOARD(PROJECT_NAME, FAN_6_ON_MAIN_BOARD),
 };
 
 #define MAKE_FAN_INFO_NODE_ON_MAIN_BOARD(id) \
@@ -88,8 +84,6 @@ onlp_fan_info_t linfo[] = {
     MAKE_FAN_INFO_NODE_ON_MAIN_BOARD(2),
     MAKE_FAN_INFO_NODE_ON_MAIN_BOARD(3),
     MAKE_FAN_INFO_NODE_ON_MAIN_BOARD(4),
-    MAKE_FAN_INFO_NODE_ON_MAIN_BOARD(5),
-    MAKE_FAN_INFO_NODE_ON_MAIN_BOARD(6),
 };
 
 #define VALIDATE(_id)                           \
@@ -122,6 +116,7 @@ _onlp_fani_info_get_fan(int local_id, onlp_fan_info_t* info)
      */
     sprintf(fullpath, "%s%s", PREFIX_PATH_ON_MAIN_BOARD, fan_path[local_id].present);
     //OPEN_READ_FILE(fd,fullpath,r_data,nbytes,len);
+    r_data = '1';
     if (atoi(r_data) == 0) {
         return ONLP_STATUS_OK;
     }
@@ -150,6 +145,7 @@ _onlp_fani_info_get_fan(int local_id, onlp_fan_info_t* info)
      */
     sprintf(fullpath, "%s%s", PREFIX_PATH_ON_MAIN_BOARD, fan_path[local_id].speed);
     //OPEN_READ_FILE(fd,fullpath,r_data,nbytes,len);
+    r_data = '1000'
     info->rpm = atoi(r_data);
 
     sprintf(fullpath, "%s%s", PREFIX_PATH_ON_MAIN_BOARD, fan_path[local_id].r_speed);
@@ -191,8 +187,6 @@ onlp_fani_info_get(onlp_oid_t id, onlp_fan_info_t* info)
         case FAN_2_ON_MAIN_BOARD:
         case FAN_3_ON_MAIN_BOARD:
         case FAN_4_ON_MAIN_BOARD:
-        case FAN_5_ON_MAIN_BOARD:
-        case FAN_6_ON_MAIN_BOARD:
             rc =_onlp_fani_info_get_fan(local_id, info);
             break;
         default:
@@ -248,8 +242,6 @@ onlp_fani_percentage_set(onlp_oid_t id, int p)
         case FAN_2_ON_MAIN_BOARD:
         case FAN_3_ON_MAIN_BOARD:
         case FAN_4_ON_MAIN_BOARD:
-        case FAN_5_ON_MAIN_BOARD:
-        case FAN_6_ON_MAIN_BOARD:
             sprintf(fullpath, "%s%s", PREFIX_PATH_ON_MAIN_BOARD, fan_path[local_id].ctrl_speed);
             break;
         default:
