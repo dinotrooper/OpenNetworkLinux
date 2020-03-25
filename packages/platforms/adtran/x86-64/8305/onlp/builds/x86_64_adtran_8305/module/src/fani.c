@@ -180,7 +180,7 @@ onlp_fani_info_get(onlp_oid_t id, onlp_fan_info_t* info)
     *info = linfo[local_id];
 
     switch (local_id)
-    {
+
         case FAN_1_ON_MAIN_BOARD:
         case FAN_2_ON_MAIN_BOARD:
         case FAN_3_ON_MAIN_BOARD:
