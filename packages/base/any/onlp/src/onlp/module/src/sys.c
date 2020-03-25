@@ -76,7 +76,6 @@ onlp_sys_init_locked__(void)
     int rv;
 
     const char* current_platform = platform_detect__();
-    const char* current_platform = platform_detect__();
     if(current_platform == NULL) {
         AIM_DIE("Could not determine the current platform.");
     }
@@ -84,7 +83,7 @@ onlp_sys_init_locked__(void)
     if(current_interface == NULL) {
         AIM_DIE("The platform driver did not return an appropriate platform identifier.");
     }
-    
+
     AIM_LOG_WARN("WARNING (integral): Current_platform = %s,  Current_interface = %s", current_platform, current_interface);
 
     if(strcmp(current_interface, current_platform)) {
