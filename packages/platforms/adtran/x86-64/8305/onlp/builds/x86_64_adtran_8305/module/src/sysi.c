@@ -40,11 +40,11 @@
 
 #define NUM_OF_THERMAL_ON_MAIN_BROAD  CHASSIS_THERMAL_COUNT
 #define NUM_OF_FAN_ON_MAIN_BROAD      CHASSIS_FAN_COUNT
-#define NUM_OF_PSU_ON_MAIN_BROAD      2
-#define NUM_OF_LED_ON_MAIN_BROAD      5
+#define NUM_OF_PSU_ON_MAIN_BROAD      0
+#define NUM_OF_LED_ON_MAIN_BROAD      3
 
 #define PREFIX_PATH_ON_CPLD_DEV          "/sys/bus/i2c/devices/"
-#define NUM_OF_CPLD                      3
+#define NUM_OF_CPLD                      0
 static char arr_cplddev_name[NUM_OF_CPLD][10] =
 {
  "4-0060",
@@ -59,34 +59,48 @@ onlp_sysi_platform_get(void)
 }
 
 int
-onlp_sysi_onie_data_get(uint8_t** data, int* size)
+onlp_sysi_onie_info_get(onlp_onie_info_t* oi)
 {
-    uint8_t* rdata = aim_zmalloc(256);
-    if(onlp_file_read(rdata, 256, size, IDPROM_PATH) == ONLP_STATUS_OK) {
-        if(*size == 256) {
-            *data = rdata;
-            return ONLP_STATUS_OK;
-        }
-    }
 
-    aim_free(rdata);
-    *size = 0;
-    return ONLP_STATUS_E_INTERNAL;
+    /* Populate onlp_onie_info_t structure with hardcoded data until EEPROM data can be used */
+    oi->product_name = "SDX-8305-20";
+    oi->part_number = "41971101F3-CLEI-CSM8500CRA";
+    oi->serial_number = "LBADTN1905AC430";
+    oi->mac = {00, 11, 22, 33, 44, 55};
+    oi->manufacture_date "03/25/2020 15:42:10";
+    oi->device_version = 0;
+    oi->label_revision = "A-HW-R02F";
+    oi->platform_name = "x86-64_adtran-8305_r0";
+    oi->onie_version = "2018.05.00.04";
+    oi->mac_range = 1000;
+    oi->manufacturer = "ADTRAN";
+    oi->country_code = "TW";
+    oi->vendor = "ADTRAN";
+    oi->diag_version = "0.0.5.7";
+    oi->crc = "0x8a5065b7";
+
+    return 0;
 }
 
 int
 onlp_sysi_platform_info_get(onlp_platform_info_t* pi)
 {
     int   i, v[NUM_OF_CPLD]={0};
-    for (i=0; i < NUM_OF_CPLD; i++) {
-        v[i] = 0;
-        if(onlp_file_read_int(v+i, "%s%s/version", PREFIX_PATH_ON_CPLD_DEV, arr_cplddev_name[i]) < 0) {
-            return ONLP_STATUS_E_INTERNAL;
-        }
-    }
-    pi->cpld_versions = aim_fstrdup("%d.%d.%d", v[0], v[1], v[2]);
+    /* PREFIX_PATH_ON_CPLD_DEV does not exist on 8305, so hardcoded values found in 8310 (10.9.9)*/
+
+    // for (i=0; i < NUM_OF_CPLD; i++) {
+    //     v[i] = 0;
+    //     if(onlp_file_read_int(v+i, "%s%s/version", PREFIX_PATH_ON_CPLD_DEV, arr_cplddev_name[i]) < 0) {
+    //         return ONLP_STATUS_E_INTERNAL;
+    //     }
+    // }
+
+    pi->cpld_versions = aim_fstrdup("10.9.9");
+    
     return 0;
 }
+
+
 
 void
 onlp_sysi_platform_info_free(onlp_platform_info_t* pi)
@@ -109,12 +123,14 @@ onlp_sysi_oids_get(onlp_oid_t* table, int max)
     }
 
     /* 5 LEDs on the chassis */
+    /* 3 in 8305 */
     for (i = 1; i <= NUM_OF_LED_ON_MAIN_BROAD; i++)
     {
         *e++ = ONLP_LED_ID_CREATE(i);
     }
 
     /* 2 PSUs on the chassis */
+    /* 0 in 8305 */
     for (i = 1; i <= NUM_OF_PSU_ON_MAIN_BROAD; i++)
     {
         *e++ = ONLP_PSU_ID_CREATE(i);
