@@ -28,7 +28,7 @@
 
 #include "x86_64_adtran_8305_log.h"
 
-#define CHASSIS_FAN_COUNT     6
+#define CHASSIS_FAN_COUNT     4
 #define CHASSIS_THERMAL_COUNT 5
 
 #define PSU1_ID 1
