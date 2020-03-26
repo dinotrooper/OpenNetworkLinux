@@ -60,7 +60,6 @@ onlp_sysi_platform_get(void)
 
 int
 onlp_sysi_onie_info_get(onlp_onie_info_t* oi)
-{
 
     /* Populate onlp_onie_info_t structure with hardcoded data until EEPROM data can be used */
     oi->product_name = "SDX-8305-20";
