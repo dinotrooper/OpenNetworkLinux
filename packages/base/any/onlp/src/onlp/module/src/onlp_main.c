@@ -32,6 +32,7 @@
 #include <AIM/aim_log_handler.h>
 #include <syslog.h>
 #include <onlp/platformi/sysi.h>
+#include <AIM/aim.h>
 
 static void platform_manager_daemon__(const char* pidfile, char** argv);
 
@@ -166,6 +167,7 @@ iterate_oids__(void)
 int
 onlpdump_main(int argc, char* argv[])
 {
+    AIM_LOG_MSG("(INTEGRAL) ONLPDUMP_MAIN() called.");
     int show = 0;
     uint32_t showflags = 0;
     int help = 0;
@@ -278,7 +280,9 @@ onlpdump_main(int argc, char* argv[])
         }
     }
 
+    AIM_LOG_MSG("(INTEGRAL) ONLP_INIT() called.");
     onlp_init();
+    AIM_LOG_MSG("(INTEGRAL) ONLP_INIT() called.");
 
     if(M) {
         platform_manager_daemon__(pidfile, argv);
@@ -348,8 +352,10 @@ onlpdump_main(int argc, char* argv[])
     if(show >= 0) {
         if(show == 0) {
             /* Default to full dump */
+            AIM_LOG_MSG("(INTEGRAL) ONLP_PLATFORM_DUMP() called.");
             onlp_platform_dump(&aim_pvs_stdout,
                                ONLP_OID_DUMP_RECURSE | ONLP_OID_DUMP_EVEN_IF_ABSENT);
+            AIM_LOG_MSG("(INTEGRAL) ONLP_PLATFORM_DUMP() executed succesfully.");
         }
         else {
             onlp_platform_show(&aim_pvs_stdout,
