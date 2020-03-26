@@ -126,4 +126,8 @@ class OnlPlatform_x86_64_adtran_8305_r0(OnlPlatformAdtran,
         # subprocess.call('echo port24 > /sys/bus/i2c/devices/49-0050/port_name', shell=True)
 
         # self.new_i2c_device('24c02', 0x57, 1)
+
+        #Prevent onlpd and onlp-snmpd access i2c peripherals
+        os.system("i2cset -y -f 0 0x31 0x14 0xfc")
+        
         return True
