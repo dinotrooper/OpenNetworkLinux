@@ -33,6 +33,8 @@
 #include <syslog.h>
 #include <onlp/platformi/sysi.h>
 #include <AIM/aim.h>
+#include <AIM/aim_log.h>
+#include <AIM/aim_printf.h>
 
 static void platform_manager_daemon__(const char* pidfile, char** argv);
 
