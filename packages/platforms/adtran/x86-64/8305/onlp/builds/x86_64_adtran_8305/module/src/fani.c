@@ -113,7 +113,7 @@ _onlp_fani_info_get_fan(int local_id, onlp_fan_info_t* info)
     /* check if fan is present
      */
     //OPEN_READ_FILE(fd,fullpath,r_data,nbytes,len);
-    r_data = '1';
+    strcpy(r_data, "1");
     if (atoi(r_data) == 0) {
         return ONLP_STATUS_OK;
     }
@@ -142,7 +142,7 @@ _onlp_fani_info_get_fan(int local_id, onlp_fan_info_t* info)
      */
     sprintf(fullpath, "%s%s", PREFIX_PATH_ON_MAIN_BOARD, fan_path[local_id].speed);
     //OPEN_READ_FILE(fd,fullpath,r_data,nbytes,len);
-    r_data = '18'
+    strcpy(r_data, "18");
     info->rpm = atoi(r_data);
 
     // Commented out because there is no r_speed file in the speculated 8305 sys fs
