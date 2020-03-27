@@ -167,7 +167,7 @@ iterate_oids__(void)
 int
 onlpdump_main(int argc, char* argv[])
 {
-    printf("(INTEGRAL) ONLPDUMP_MAIN() called.");
+    printf("(INTEGRAL) ONLPDUMP_MAIN() called.\n");
     int show = 0;
     uint32_t showflags = 0;
     int help = 0;
@@ -280,9 +280,9 @@ onlpdump_main(int argc, char* argv[])
         }
     }
 
-    printf("(INTEGRAL) ONLP_INIT() called.");
+    printf("(INTEGRAL) ONLP_INIT() called.\n");
     onlp_init();
-    printf("(INTEGRAL) ONLP_INIT() called.");
+    printf("(INTEGRAL) ONLP_INIT() called.\n");
 
     if(M) {
         platform_manager_daemon__(pidfile, argv);
@@ -352,10 +352,10 @@ onlpdump_main(int argc, char* argv[])
     if(show >= 0) {
         if(show == 0) {
             /* Default to full dump */
-            printf("(INTEGRAL) ONLP_PLATFORM_DUMP() called.");
+            printf("(INTEGRAL) ONLP_PLATFORM_DUMP() called.\n");
             onlp_platform_dump(&aim_pvs_stdout,
                                ONLP_OID_DUMP_RECURSE | ONLP_OID_DUMP_EVEN_IF_ABSENT);
-            printf("(INTEGRAL) ONLP_PLATFORM_DUMP() executed succesfully.");
+            printf("(INTEGRAL) ONLP_PLATFORM_DUMP() executed succesfully.\n");
         }
         else {
             onlp_platform_show(&aim_pvs_stdout,
