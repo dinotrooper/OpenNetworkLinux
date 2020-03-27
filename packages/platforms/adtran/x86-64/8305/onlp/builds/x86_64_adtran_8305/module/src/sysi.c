@@ -33,74 +33,60 @@
 #include <onlp/platformi/fani.h>
 #include <onlp/platformi/psui.h>
 
-#include "x86_64_adtran_8305_int.h"
-#include "x86_64_adtran_8305_log.h"
+#include "x86_64_accton_as7712_32x_int.h"
+#include "x86_64_accton_as7712_32x_log.h"
 
 #include "platform_lib.h"
 
 #define NUM_OF_THERMAL_ON_MAIN_BROAD  CHASSIS_THERMAL_COUNT
 #define NUM_OF_FAN_ON_MAIN_BROAD      CHASSIS_FAN_COUNT
-#define NUM_OF_PSU_ON_MAIN_BROAD      0
-#define NUM_OF_LED_ON_MAIN_BROAD      3
+#define NUM_OF_PSU_ON_MAIN_BROAD      2
+#define NUM_OF_LED_ON_MAIN_BROAD      5
 
 #define PREFIX_PATH_ON_CPLD_DEV          "/sys/bus/i2c/devices/"
-#define NUM_OF_CPLD                      0
-// static char arr_cplddev_name[NUM_OF_CPLD][10] =
-// {
-//  "4-0060",
-//  "5-0062",
-//  "6-0064"
-// };
+#define NUM_OF_CPLD                      3
+static char arr_cplddev_name[NUM_OF_CPLD][10] =
+{
+ "4-0060",
+ "5-0062",
+ "6-0064"
+};
 
 const char*
 onlp_sysi_platform_get(void)
 {
-    return "x86-64-adtran-8305-r0";
+    return "x86-64-accton-as7712-32x-r0";
 }
 
 int
-onlp_sysi_onie_info_get(onlp_onie_info_t* oi)
+onlp_sysi_onie_data_get(uint8_t** data, int* size)
 {
-    /* Populate onlp_onie_info_t structure with hardcoded data until EEPROM data can be used */
-    oi->product_name = "SDX-8305-20";
-    oi->part_number = "41971101F3-CLEI-CSM8500CRA";
-    oi->serial_number = "LBADTN1905AC430";
-    oi->mac = {00, 11, 22, 33, 44, 55};
-    oi->manufacture_date "03/25/2020 15:42:10";
-    oi->device_version = 0;
-    oi->label_revision = "A-HW-R02F";
-    oi->platform_name = "x86-64_adtran-8305_r0";
-    oi->onie_version = "2018.05.00.04";
-    oi->mac_range = 1000;
-    oi->manufacturer = "ADTRAN";
-    oi->country_code = "TW";
-    oi->vendor = "ADTRAN";
-    oi->diag_version = "0.0.5.7";
-    oi->crc = "0x8a5065b7";
+    uint8_t* rdata = aim_zmalloc(256);
+    if(onlp_file_read(rdata, 256, size, IDPROM_PATH) == ONLP_STATUS_OK) {
+        if(*size == 256) {
+            *data = rdata;
+            return ONLP_STATUS_OK;
+        }
+    }
 
-    return 0;
+    aim_free(rdata);
+    *size = 0;
+    return ONLP_STATUS_E_INTERNAL;
 }
 
 int
 onlp_sysi_platform_info_get(onlp_platform_info_t* pi)
 {
-    /* REMOVED CPLD 8305 */
-    // int   i, v[NUM_OF_CPLD]={0};
-    /* PREFIX_PATH_ON_CPLD_DEV does not exist on 8305, so hardcoded values found in 8310 (10.9.9)*/
-
-    // for (i=0; i < NUM_OF_CPLD; i++) {
-    //     v[i] = 0;
-    //     if(onlp_file_read_int(v+i, "%s%s/version", PREFIX_PATH_ON_CPLD_DEV, arr_cplddev_name[i]) < 0) {
-    //         return ONLP_STATUS_E_INTERNAL;
-    //     }
-    // }
-
-    pi->cpld_versions = aim_fstrdup("10.9.9");
-    
+    int   i, v[NUM_OF_CPLD]={0};
+    for (i=0; i < NUM_OF_CPLD; i++) {
+        v[i] = 0;
+        if(onlp_file_read_int(v+i, "%s%s/version", PREFIX_PATH_ON_CPLD_DEV, arr_cplddev_name[i]) < 0) {
+            return ONLP_STATUS_E_INTERNAL;
+        }
+    }
+    pi->cpld_versions = aim_fstrdup("%d.%d.%d", v[0], v[1], v[2]);
     return 0;
 }
-
-
 
 void
 onlp_sysi_platform_info_free(onlp_platform_info_t* pi)
@@ -123,14 +109,12 @@ onlp_sysi_oids_get(onlp_oid_t* table, int max)
     }
 
     /* 5 LEDs on the chassis */
-    /* 3 in 8305 */
     for (i = 1; i <= NUM_OF_LED_ON_MAIN_BROAD; i++)
     {
         *e++ = ONLP_LED_ID_CREATE(i);
     }
 
     /* 2 PSUs on the chassis */
-    /* 0 in 8305 */
     for (i = 1; i <= NUM_OF_PSU_ON_MAIN_BROAD; i++)
     {
         *e++ = ONLP_PSU_ID_CREATE(i);
@@ -170,27 +154,27 @@ fan_ctrl_policy_t  fan_ctrl_policy_b2f[] = {
 
 /*
  * For AC power Front to Back :
- *	* If any fan fail, please fan speed register to 15
- *	* The max value of Fan speed register is 9
- *		[LM75(48) + LM75(49) + LM75(4A)] > 174  => set Fan speed value from 4 to 5
- *		[LM75(48) + LM75(49) + LM75(4A)] > 182  => set Fan speed value from 5 to 7
- *		[LM75(48) + LM75(49) + LM75(4A)] > 190  => set Fan speed value from 7 to 9
+ *  * If any fan fail, please fan speed register to 15
+ *  * The max value of Fan speed register is 9
+ *      [LM75(48) + LM75(49) + LM75(4A)] > 174  => set Fan speed value from 4 to 5
+ *      [LM75(48) + LM75(49) + LM75(4A)] > 182  => set Fan speed value from 5 to 7
+ *      [LM75(48) + LM75(49) + LM75(4A)] > 190  => set Fan speed value from 7 to 9
  *
- *		[LM75(48) + LM75(49) + LM75(4A)] < 170  => set Fan speed value from 5 to 4
- *		[LM75(48) + LM75(49) + LM75(4A)] < 178  => set Fan speed value from 7 to 5
- *		[LM75(48) + LM75(49) + LM75(4A)] < 186  => set Fan speed value from 9 to 7
+ *      [LM75(48) + LM75(49) + LM75(4A)] < 170  => set Fan speed value from 5 to 4
+ *      [LM75(48) + LM75(49) + LM75(4A)] < 178  => set Fan speed value from 7 to 5
+ *      [LM75(48) + LM75(49) + LM75(4A)] < 186  => set Fan speed value from 9 to 7
  *
  *
  * For  AC power Back to Front :
- *	* If any fan fail, please fan speed register to 15
- *	* The max value of Fan speed register is 10
- *		[LM75(48) + LM75(49) + LM75(4A)] > 140  => set Fan speed value from 4 to 5
- *		[LM75(48) + LM75(49) + LM75(4A)] > 150  => set Fan speed value from 5 to 7
- *		[LM75(48) + LM75(49) + LM75(4A)] > 160  => set Fan speed value from 7 to 10
+ *  * If any fan fail, please fan speed register to 15
+ *  * The max value of Fan speed register is 10
+ *      [LM75(48) + LM75(49) + LM75(4A)] > 140  => set Fan speed value from 4 to 5
+ *      [LM75(48) + LM75(49) + LM75(4A)] > 150  => set Fan speed value from 5 to 7
+ *      [LM75(48) + LM75(49) + LM75(4A)] > 160  => set Fan speed value from 7 to 10
  *
- *		[LM75(48) + LM75(49) + LM75(4A)] < 135  => set Fan speed value from 5 to 4
- *		[LM75(48) + LM75(49) + LM75(4A)] < 145  => set Fan speed value from 7 to 5
- *		[LM75(48) + LM75(49) + LM75(4A)] < 155  => set Fan speed value from 10 to 7
+ *      [LM75(48) + LM75(49) + LM75(4A)] < 135  => set Fan speed value from 5 to 4
+ *      [LM75(48) + LM75(49) + LM75(4A)] < 145  => set Fan speed value from 7 to 5
+ *      [LM75(48) + LM75(49) + LM75(4A)] < 155  => set Fan speed value from 10 to 7
  */
 int
 onlp_sysi_platform_manage_fans(void)
@@ -262,16 +246,16 @@ onlp_sysi_platform_manage_fans(void)
     /* Decision 2: If no matched fan speed is found from the policy,
      *             use FAN_DUTY_CYCLE_MIN as default speed
      */
-	for (i = 0; i < arr_size; i++) {
-	    if (policy[i].duty_cycle != cur_duty_cycle)
-		    continue;
+    for (i = 0; i < arr_size; i++) {
+        if (policy[i].duty_cycle != cur_duty_cycle)
+            continue;
 
-		break;
-	}
+        break;
+    }
 
-	if (i == arr_size) {
+    if (i == arr_size) {
         return onlp_fani_percentage_set(ONLP_FAN_ID_CREATE(1), policy[0].duty_cycle);
-	}
+    }
 
     /* Get current temperature
      */
@@ -289,16 +273,16 @@ onlp_sysi_platform_manage_fans(void)
     new_duty_cycle = cur_duty_cycle;
 
     if ((temp >= policy[i].temp_up_adjust) && (i != (arr_size-1))) {
-	    new_duty_cycle = policy[i+1].duty_cycle;
-	}
-	else if ((temp <= policy[i].temp_down_adjust) && (i != 0)) {
-	    new_duty_cycle = policy[i-1].duty_cycle;
-	}
+        new_duty_cycle = policy[i+1].duty_cycle;
+    }
+    else if ((temp <= policy[i].temp_down_adjust) && (i != 0)) {
+        new_duty_cycle = policy[i-1].duty_cycle;
+    }
 
-	if (new_duty_cycle == cur_duty_cycle) {
+    if (new_duty_cycle == cur_duty_cycle) {
         /* Duty cycle does not change, just return */
-	    return ONLP_STATUS_OK;
-	}
+        return ONLP_STATUS_OK;
+    }
 
     return onlp_fani_percentage_set(ONLP_FAN_ID_CREATE(1), new_duty_cycle);
 }
