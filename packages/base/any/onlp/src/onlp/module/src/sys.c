@@ -78,7 +78,7 @@ onlp_sys_init_locked__(void)
     const char* current_platform = platform_detect__();
     const char* current_interface_debug = onlp_sysi_platform_get();
 
-    printf("WARNING (integral): Current_platform = %s,  Current_interface = %s\n", current_platform, current_interface);
+    printf("WARNING (integral): Current_platform = %s,  Current_interface = %s\n", current_platform, current_interface_debug);
     printf("(INTEGRAL) - onlp_sys_init(debug 2) -- current_platform = %s\n", current_platform);
     if(current_platform == NULL) {
             printf("(INTEGRAL) - onlp_sys_init(debug 2.5)\n");
