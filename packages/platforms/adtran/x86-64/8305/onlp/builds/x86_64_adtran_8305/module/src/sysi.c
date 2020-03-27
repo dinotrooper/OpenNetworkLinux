@@ -45,12 +45,12 @@
 
 #define PREFIX_PATH_ON_CPLD_DEV          "/sys/bus/i2c/devices/"
 #define NUM_OF_CPLD                      0
-static char arr_cplddev_name[NUM_OF_CPLD][10] =
-{
- "4-0060",
- "5-0062",
- "6-0064"
-};
+// static char arr_cplddev_name[NUM_OF_CPLD][10] =
+// {
+//  "4-0060",
+//  "5-0062",
+//  "6-0064"
+// };
 
 const char*
 onlp_sysi_platform_get(void)
@@ -60,7 +60,7 @@ onlp_sysi_platform_get(void)
 
 int
 onlp_sysi_onie_info_get(onlp_onie_info_t* oi)
-
+{
     /* Populate onlp_onie_info_t structure with hardcoded data until EEPROM data can be used */
     oi->product_name = "SDX-8305-20";
     oi->part_number = "41971101F3-CLEI-CSM8500CRA";
@@ -84,7 +84,8 @@ onlp_sysi_onie_info_get(onlp_onie_info_t* oi)
 int
 onlp_sysi_platform_info_get(onlp_platform_info_t* pi)
 {
-    int   i, v[NUM_OF_CPLD]={0};
+    /* REMOVED CPLD 8305 */
+    // int   i, v[NUM_OF_CPLD]={0};
     /* PREFIX_PATH_ON_CPLD_DEV does not exist on 8305, so hardcoded values found in 8310 (10.9.9)*/
 
     // for (i=0; i < NUM_OF_CPLD; i++) {
