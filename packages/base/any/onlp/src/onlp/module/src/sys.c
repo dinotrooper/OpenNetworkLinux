@@ -87,7 +87,7 @@ onlp_sys_init_locked__(void)
         printf("(INTEGRAL) - onlp_sys_init(debug 3.5)\n");
         AIM_DIE("The platform driver did not return an appropriate platform identifier.");
     }
-    AIM_LOG_WARN("WARNING (integral): Current_platform = %s,  Current_interface = %s", current_platform, current_interface);
+    printf("WARNING (integral): Current_platform = %s,  Current_interface = %s\n", current_platform, current_interface);
     printf("(INTEGRAL) - onlp_sys_init(debug 4)\n");
 
     if(strcmp(current_interface, current_platform)) {
