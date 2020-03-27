@@ -74,30 +74,40 @@ static int
 onlp_sys_init_locked__(void)
 {
     int rv;
-
+    printf("(INTEGRAL) - onlp_sys_init(debug 1)\n");
     const char* current_platform = platform_detect__();
+    printf("(INTEGRAL) - onlp_sys_init(debug 2)\n");
     if(current_platform == NULL) {
+            printf("(INTEGRAL) - onlp_sys_init(debug 2.5)\n");
         AIM_DIE("Could not determine the current platform.");
     }
     const char* current_interface = onlp_sysi_platform_get();
+    printf("(INTEGRAL) - onlp_sys_init(debug 3)\n");
     if(current_interface == NULL) {
+        printf("(INTEGRAL) - onlp_sys_init(debug 3.5)\n");
         AIM_DIE("The platform driver did not return an appropriate platform identifier.");
     }
-
     AIM_LOG_WARN("WARNING (integral): Current_platform = %s,  Current_interface = %s", current_platform, current_interface);
+    printf("(INTEGRAL) - onlp_sys_init(debug 4)\n");
 
     if(strcmp(current_interface, current_platform)) {
         /* They do not match. Ask the interface if it supports the current platform. */
+        printf("(INTEGRAL) - onlp_sys_init(debug 5)\n");
         int rv = onlp_sysi_platform_set(current_platform);
+        printf("(INTEGRAL) - onlp_sys_init(debug 6)\n");
         if(rv < 0) {
+            printf("(INTEGRAL) - onlp_sys_init(debug 7)\n");
             AIM_DIE("The current platform interface (%s) does not support the current platform (%s). This is fatal.",
                     current_interface, current_platform);
         }
     }
 
     /* If we get here, its all good */
+    printf("(INTEGRAL) - onlp_sys_init(debug 8) 'if we get here its all good (:'\n");
     aim_free((char*)current_platform);
+    printf("(INTEGRAL) - onlp_sys_info(debug 9)\n");
     rv = onlp_sysi_init();
+    printf("(INTEGRAL) - onlp_sys_info(debug 10)\n");
     return rv;
 }
 ONLP_LOCKED_API0(onlp_sys_init);
