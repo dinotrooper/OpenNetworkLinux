@@ -167,7 +167,7 @@ iterate_oids__(void)
 int
 onlpdump_main(int argc, char* argv[])
 {
-    printf("(INTEGRAL) ONLPDUMP_MAIN() called.\n");
+    printf("\n\n(INTEGRAL) ONLPDUMP_MAIN() called.\n");
     int show = 0;
     uint32_t showflags = 0;
     int help = 0;

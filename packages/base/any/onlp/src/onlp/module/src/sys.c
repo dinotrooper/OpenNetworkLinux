@@ -74,9 +74,9 @@ static int
 onlp_sys_init_locked__(void)
 {
     int rv;
-    printf("(INTEGRAL) - onlp_sys_init(debug 1)\n");
+    printf("\n(INTEGRAL) - onlp_sys_init(debug 1)\n");
     const char* current_platform = platform_detect__();
-    printf("(INTEGRAL) - onlp_sys_init(debug 2)\n");
+    printf("(INTEGRAL) - onlp_sys_init(debug 2) -- current_platform = %s\n", current_platform);
     if(current_platform == NULL) {
             printf("(INTEGRAL) - onlp_sys_init(debug 2.5)\n");
         AIM_DIE("Could not determine the current platform.");
