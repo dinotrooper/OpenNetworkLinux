@@ -65,8 +65,8 @@ onlp_sysi_onie_info_get(onlp_onie_info_t* oi)
     oi->product_name = "SDX-8305-20";
     oi->part_number = "41971101F3-CLEI-CSM8500CRA";
     oi->serial_number = "LBADTN1905AC430";
-    oi->mac = {00, 11, 22, 33, 44, 55};
-    oi->manufacture_date "03/25/2020 15:42:10";
+    oi->mac[6] = {00, 11, 22, 33, 44, 55};
+    oi->manufacture_date = "03/25/2020 15:42:10";
     oi->device_version = 0;
     oi->label_revision = "A-HW-R02F";
     oi->platform_name = "x86-64_adtran-8305_r0";
