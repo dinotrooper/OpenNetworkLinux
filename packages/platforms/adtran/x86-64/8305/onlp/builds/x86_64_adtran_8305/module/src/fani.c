@@ -180,7 +180,7 @@ onlp_fani_info_get(onlp_oid_t id, onlp_fan_info_t* info)
     *info = linfo[local_id];
 
     switch (local_id)
-
+    {
         case FAN_1_ON_MAIN_BOARD:
         case FAN_2_ON_MAIN_BOARD:
         case FAN_3_ON_MAIN_BOARD:
@@ -240,7 +240,7 @@ onlp_fani_percentage_set(onlp_oid_t id, int p)
         case FAN_2_ON_MAIN_BOARD:
         case FAN_3_ON_MAIN_BOARD:
         case FAN_4_ON_MAIN_BOARD:
-            sprintf(fullpath, "%s%s", PREFIX_PATH_ON_MAIN_BOARD, fan_path[local_id].ctrl_speed);
+            sprintf(fullpath, "%s%s", PREFIX_PATH_ON_MAIN_BOARD, fan_path[local_id].speed);
             break;
         default:
             return ONLP_STATUS_E_INVALID;
