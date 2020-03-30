@@ -106,7 +106,7 @@ onlp_fan_info_t linfo[] = {
 static int
 _onlp_fani_info_get_fan(int local_id, onlp_fan_info_t* info)
 {
-    int   fd, len, nbytes = 10;
+    // int   fd, len, nbytes = 10;
     char  r_data[10]   = {0};
     char  fullpath[PATH_MAX] = {0};
 
