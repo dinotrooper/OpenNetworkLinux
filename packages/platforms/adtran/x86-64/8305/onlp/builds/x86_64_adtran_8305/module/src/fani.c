@@ -136,7 +136,7 @@ _onlp_fani_info_get_fan(int local_id, onlp_fan_info_t* info)
     /* get fan percentage */
     sprintf(fullpath, "%s%s", PREFIX_PATH_ON_MAIN_BOARD, fan_path[local_id].pwm)
     OPEN_READ_FILE(fd, fullpath, r_data, nbytes, len);
-    info->percentage = (atoi(r_data)/MAX_FAN_PWM)*100;
+    info->percentage = (int)(((double)atoi(r_data)/(double)MAX_FAN_PWM)*100);
 
     return ONLP_STATUS_OK;
 }
