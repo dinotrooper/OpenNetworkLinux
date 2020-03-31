@@ -29,9 +29,9 @@
 #include <limits.h>
 #include "platform_lib.h"
 
-#define PREFIX_PATH_ON_MAIN_BOARD   "/sys/hwmon/hwmon2/"
+#define PREFIX_PATH_ON_MAIN_BOARD   "/sys/class/hwmon/hwmon2/"
 
-#define MAX_FAN_SPEED     18000
+#define MAX_FAN_PWM     255
 
 #define PROJECT_NAME
 #define LEN_FILE_NAME 80
@@ -42,17 +42,19 @@
 #define FAN_3_ON_MAIN_BOARD	3
 #define FAN_4_ON_MAIN_BOARD	4
 
+
 typedef struct fan_path_S
 {
-    char status[LEN_FILE_NAME];
-    char percentage[LEN_FILE_NAME];
+    char fault[LEN_FILE_NAME];
+    char alarm[LEN_FILE_NAME];
     char speed[LEN_FILE_NAME];
     char label[LEN_FILE_NAME];
+    char pwm[LEN_FILE_NAME];
 }fan_path_T;
 
 #define _MAKE_FAN_PATH_ON_MAIN_BOARD(prj,id) \
-    { #prj"fan"#id"_status", #prj"fan"#id"_percentage", #prj"fan"#id"_speed", \
-      #prj"fan"#id"_label"}
+    { #prj"fan"#id"_fault", #prj"fan"#id"_alarm", #prj"fan"#id"_input", \
+      #prj"fan"#id"_label", #prj"pwm1"}
 
 #define MAKE_FAN_PATH_ON_MAIN_BOARD(prj,id) _MAKE_FAN_PATH_ON_MAIN_BOARD(prj,id)
 
@@ -67,7 +69,7 @@ static fan_path_T fan_path[] =  /* must map with onlp_fan_id */
 
 #define MAKE_FAN_INFO_NODE_ON_MAIN_BOARD(id) \
     { \
-        { ONLP_FAN_ID_CREATE(FAN_##id##_ON_MAIN_BOARD), "8305-Chassis Fan "#id, 0 }, \
+        { ONLP_FAN_ID_CREATE(FAN_##id##_ON_MAIN_BOARD), "FAN #"#id, 0 }, \
         0x0, \
         (ONLP_FAN_CAPS_SET_PERCENTAGE | ONLP_FAN_CAPS_GET_RPM | ONLP_FAN_CAPS_GET_PERCENTAGE), \
         0, \
@@ -110,54 +112,34 @@ _onlp_fani_info_get_fan(int local_id, onlp_fan_info_t* info)
     char  r_data[10]   = {0};
     char  fullpath[PATH_MAX] = {0};
 
-    /* check if fan is present
-     */
-    //OPEN_READ_FILE(fd,fullpath,r_data,nbytes,len);
-    strcpy(r_data, "1");
-    if (atoi(r_data) == 0) {
+    /* check if fan is present */
+    sprintf(fullpath, "%s%s", PREFIX_PATH_ON_MAIN_BOARD, fan_path[local_id].fault)
+    OPEN_READ_FILE(fd,fullpath,r_data,nbytes,len);
+    if (atoi(r_data) == 1) {
         return ONLP_STATUS_OK;
     }
     info->status |= ONLP_FAN_STATUS_PRESENT;
 
-    /* get fan fault status (turn on when any one fails)
-     */
-    sprintf(fullpath, "%s%s", PREFIX_PATH_ON_MAIN_BOARD, fan_path[local_id].status);
-    //OPEN_READ_FILE(fd,fullpath,r_data,nbytes,len);
+    /* get fan alarm status */
+    sprintf(fullpath, "%s%s", PREFIX_PATH_ON_MAIN_BOARD, fan_path[local_id].alarm);
+    OPEN_READ_FILE(fd,fullpath,r_data,nbytes,len);
     if (atoi(r_data) > 0) {
         info->status |= ONLP_FAN_STATUS_FAILED;
         return ONLP_STATUS_OK;
     }
 
-    /* get fan/fanr direction (both : the same) -- so far no direction file present in speculated 8305 sys fs --
-     */
-    //sprintf(fullpath, "%s%s", PREFIX_PATH_ON_MAIN_BOARD, fan_path[local_id].direction);
-    //OPEN_READ_FILE(fd,fullpath,r_data,nbytes,len);
-
-    if (atoi(r_data) == 0) /*B2F*/
-        info->status |= ONLP_FAN_STATUS_B2F;
-    else
-        info->status |= ONLP_FAN_STATUS_F2B;
-
-    /* get fan speed (take the min from two speeds)
-     */
+    /* get fan speed */
     sprintf(fullpath, "%s%s", PREFIX_PATH_ON_MAIN_BOARD, fan_path[local_id].speed);
-    //OPEN_READ_FILE(fd,fullpath,r_data,nbytes,len);
-    strcpy(r_data, "18");
+    OPEN_READ_FILE(fd,fullpath,r_data,nbytes,len);
     info->rpm = atoi(r_data);
 
-    // Commented out because there is no r_speed file in the speculated 8305 sys fs
-    // sprintf(fullpath, "%s%s", PREFIX_PATH_ON_MAIN_BOARD, fan_path[local_id].r_speed);
-    //OPEN_READ_FILE(fd,fullpath,r_data,nbytes,len);
-    if (info->rpm > atoi(r_data)) {
-        info->rpm = atoi(r_data);
-    }
-
-    /* get speed percentage from rpm */
-    info->percentage = (info->rpm * 100)/MAX_FAN_SPEED;
+    /* get fan percentage */
+    sprintf(fullpath, "%s%s", PREFIX_PATH_ON_MAIN_BOARD, fan_path[local_id].pwm)
+    OPEN_READ_FILE(fd, fullpath, r_data, nbytes, len);
+    info->percentage = (atoi(r_data)/MAX_FAN_PWM)*100;
 
     return ONLP_STATUS_OK;
 }
-
 
 
 /*
@@ -217,6 +199,8 @@ onlp_fani_rpm_set(onlp_oid_t id, int rpm)
  *
  * It is optional if you have no fans at all with this feature.
  */
+
+//PWM - "sys/class/hwmon/hwmon2/pwm1"
 int
 onlp_fani_percentage_set(onlp_oid_t id, int p)
 {
@@ -240,12 +224,15 @@ onlp_fani_percentage_set(onlp_oid_t id, int p)
         case FAN_2_ON_MAIN_BOARD:
         case FAN_3_ON_MAIN_BOARD:
         case FAN_4_ON_MAIN_BOARD:
-            sprintf(fullpath, "%s%s", PREFIX_PATH_ON_MAIN_BOARD, fan_path[local_id].speed);
+            sprintf(fullpath, "%s%s", PREFIX_PATH_ON_MAIN_BOARD, fan_path[local_id].pwm);
             break;
         default:
             return ONLP_STATUS_E_INVALID;
     }
-    sprintf(data, "%d", p);
+
+
+
+    sprintf(data, "%d", (p/100)*MAX_FAN_PWM);
     DEBUG_PRINT("[Debug][%s][%d][openfile: %s][data=%s]\n", __FUNCTION__, __LINE__, fullpath, data);
 
     /* Create output file descriptor */

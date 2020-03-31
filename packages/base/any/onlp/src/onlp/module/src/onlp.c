@@ -52,21 +52,13 @@ onlp_init(void)
     onlp_api_lock_init();
 #endif
 
-    printf("(INTEGRAL) - calling onlp_json_init()\n");
     onlp_json_init(cfile);
-    printf("(INTEGRAL) - calling onlp_sys_init()\n");
     onlp_sys_init();
-    printf("(INTEGRAL) - calling onlp_sfp_init()\n");
     onlp_sfp_init();
-    printf("(INTEGRAL) - calling onlp_led_init()\n");
     onlp_led_init();
-    printf("(INTEGRAL) - calling onlp_psu_init()\n");
     onlp_psu_init();
-    printf("(INTEGRAL) - calling onlp_fan_init()\n");
     onlp_fan_init();
-    printf("(INTEGRAL) - calling onlp_thermal_init()\n");
     onlp_thermal_init();
-    printf("(INTEGRAL) - all init() functions executed succesfully\n");
     return 0;
 }
 
