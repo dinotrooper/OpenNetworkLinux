@@ -2,7 +2,7 @@
  * A hwmon driver for the adtran_i2c_cpld
  *
  * Copyright (C) 2013 Accton Technology Corporation.
- * Brandon Chuang <brandon_chuang@accton.com.tw>
+ * Stephen Boyett <stephen.boyett@adtran.com>
  *
  * Based on ad7414.c
  * Copyright 2006 Stefan Roese <sr at denx.de>, DENX Software Engineering
@@ -206,29 +206,6 @@ static void __exit adtran_i2c_cpld_exit(void)
 {
 	i2c_del_driver(&adtran_i2c_cpld_driver);
 }
-	
-static struct dmi_system_id as7512_dmi_table[] = {
-	{
-		.ident = "Accton AS7512",
-		.matches = {
-			DMI_MATCH(DMI_BOARD_VENDOR, "Accton"),
-			DMI_MATCH(DMI_PRODUCT_NAME, "AS7512"),
-		},
-	},
-	{
-		.ident = "Accton AS7512",
-		.matches = {
-			DMI_MATCH(DMI_SYS_VENDOR, "Accton"),
-			DMI_MATCH(DMI_PRODUCT_NAME, "AS7512"),
-		},
-	},
-};
-
-int platform_accton_as7512_32x(void)
-{
-	return dmi_check_system(as7512_dmi_table);
-}
-EXPORT_SYMBOL(platform_accton_as7512_32x);
 
 static struct dmi_system_id adtran_8305_dmi_table[] = {
 	{
@@ -253,76 +230,10 @@ int platform_adtran_8305(void)
 }
 EXPORT_SYMBOL(platform_adtran_8305);
 
-static struct dmi_system_id as5812_54t_dmi_table[] = {
-	{
-		.ident = "Accton AS5812 54t",
-		.matches = {
-			DMI_MATCH(DMI_BOARD_VENDOR, "Accton"),
-			DMI_MATCH(DMI_PRODUCT_NAME, "AS5812-54T"),
-		},
-	},
-	{
-		.ident = "Accton AS5812 54t",
-		.matches = {
-			DMI_MATCH(DMI_SYS_VENDOR, "Accton"),
-			DMI_MATCH(DMI_PRODUCT_NAME, "AS5812-54T"),
-		},
-	},
-};
 
-int platform_accton_as5812_54t(void)
-{
-	return dmi_check_system(as5812_54t_dmi_table);
-}
-EXPORT_SYMBOL(platform_accton_as5812_54t);
 
-static struct dmi_system_id as5512_54x_dmi_table[] = {
-	{
-		.ident = "Accton AS5512",
-		.matches = {
-			DMI_MATCH(DMI_BOARD_VENDOR, "Accton"),
-			DMI_MATCH(DMI_PRODUCT_NAME, "AS5512"),
-		},
-	},
-	{
-		.ident = "Accton AS5512",
-		.matches = {
-			DMI_MATCH(DMI_SYS_VENDOR, "Accton"),
-			DMI_MATCH(DMI_PRODUCT_NAME, "AS5512"),
-		},
-	},
-};
 
-int platform_accton_as5512_54x(void)
-{
-	return dmi_check_system(as5512_54x_dmi_table);
-}
-EXPORT_SYMBOL(platform_accton_as5512_54x);
-
-static struct dmi_system_id as7716_dmi_table[] = {
-        {
-                .ident = "Accton AS7716",
-                .matches = {
-                        DMI_MATCH(DMI_BOARD_VENDOR, "Accton"),
-                        DMI_MATCH(DMI_PRODUCT_NAME, "AS7716"),
-                },
-        },
-        {
-                .ident = "Accton AS7716",
-                .matches = {
-                        DMI_MATCH(DMI_SYS_VENDOR, "Accton"),
-                        DMI_MATCH(DMI_PRODUCT_NAME, "AS7716"),
-                },
-        },
-};
-
-int platform_accton_as7716_32x(void)
-{
-        return dmi_check_system(as7716_dmi_table);
-}
-EXPORT_SYMBOL(platform_accton_as7716_32x);
-
-MODULE_AUTHOR("Brandon Chuang <brandon_chuang@accton.com.tw>");
+MODULE_AUTHOR("Stephen Boyett <stephen.boyett@adtran.com>");
 MODULE_DESCRIPTION("adtran_i2c_cpld driver");
 MODULE_LICENSE("GPL");
 
