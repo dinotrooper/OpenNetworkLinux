@@ -154,27 +154,27 @@ fan_ctrl_policy_t  fan_ctrl_policy_b2f[] = {
 
 /*
  * For AC power Front to Back :
- *  * If any fan fail, please fan speed register to 15
- *  * The max value of Fan speed register is 9
- *      [LM75(48) + LM75(49) + LM75(4A)] > 174  => set Fan speed value from 4 to 5
- *      [LM75(48) + LM75(49) + LM75(4A)] > 182  => set Fan speed value from 5 to 7
- *      [LM75(48) + LM75(49) + LM75(4A)] > 190  => set Fan speed value from 7 to 9
+ *	* If any fan fail, please fan speed register to 15
+ *	* The max value of Fan speed register is 9
+ *		[LM75(48) + LM75(49) + LM75(4A)] > 174  => set Fan speed value from 4 to 5
+ *		[LM75(48) + LM75(49) + LM75(4A)] > 182  => set Fan speed value from 5 to 7
+ *		[LM75(48) + LM75(49) + LM75(4A)] > 190  => set Fan speed value from 7 to 9
  *
- *      [LM75(48) + LM75(49) + LM75(4A)] < 170  => set Fan speed value from 5 to 4
- *      [LM75(48) + LM75(49) + LM75(4A)] < 178  => set Fan speed value from 7 to 5
- *      [LM75(48) + LM75(49) + LM75(4A)] < 186  => set Fan speed value from 9 to 7
+ *		[LM75(48) + LM75(49) + LM75(4A)] < 170  => set Fan speed value from 5 to 4
+ *		[LM75(48) + LM75(49) + LM75(4A)] < 178  => set Fan speed value from 7 to 5
+ *		[LM75(48) + LM75(49) + LM75(4A)] < 186  => set Fan speed value from 9 to 7
  *
  *
  * For  AC power Back to Front :
- *  * If any fan fail, please fan speed register to 15
- *  * The max value of Fan speed register is 10
- *      [LM75(48) + LM75(49) + LM75(4A)] > 140  => set Fan speed value from 4 to 5
- *      [LM75(48) + LM75(49) + LM75(4A)] > 150  => set Fan speed value from 5 to 7
- *      [LM75(48) + LM75(49) + LM75(4A)] > 160  => set Fan speed value from 7 to 10
+ *	* If any fan fail, please fan speed register to 15
+ *	* The max value of Fan speed register is 10
+ *		[LM75(48) + LM75(49) + LM75(4A)] > 140  => set Fan speed value from 4 to 5
+ *		[LM75(48) + LM75(49) + LM75(4A)] > 150  => set Fan speed value from 5 to 7
+ *		[LM75(48) + LM75(49) + LM75(4A)] > 160  => set Fan speed value from 7 to 10
  *
- *      [LM75(48) + LM75(49) + LM75(4A)] < 135  => set Fan speed value from 5 to 4
- *      [LM75(48) + LM75(49) + LM75(4A)] < 145  => set Fan speed value from 7 to 5
- *      [LM75(48) + LM75(49) + LM75(4A)] < 155  => set Fan speed value from 10 to 7
+ *		[LM75(48) + LM75(49) + LM75(4A)] < 135  => set Fan speed value from 5 to 4
+ *		[LM75(48) + LM75(49) + LM75(4A)] < 145  => set Fan speed value from 7 to 5
+ *		[LM75(48) + LM75(49) + LM75(4A)] < 155  => set Fan speed value from 10 to 7
  */
 int
 onlp_sysi_platform_manage_fans(void)
@@ -246,16 +246,16 @@ onlp_sysi_platform_manage_fans(void)
     /* Decision 2: If no matched fan speed is found from the policy,
      *             use FAN_DUTY_CYCLE_MIN as default speed
      */
-    for (i = 0; i < arr_size; i++) {
-        if (policy[i].duty_cycle != cur_duty_cycle)
-            continue;
+	for (i = 0; i < arr_size; i++) {
+	    if (policy[i].duty_cycle != cur_duty_cycle)
+		    continue;
 
-        break;
-    }
+		break;
+	}
 
-    if (i == arr_size) {
+	if (i == arr_size) {
         return onlp_fani_percentage_set(ONLP_FAN_ID_CREATE(1), policy[0].duty_cycle);
-    }
+	}
 
     /* Get current temperature
      */
@@ -273,16 +273,16 @@ onlp_sysi_platform_manage_fans(void)
     new_duty_cycle = cur_duty_cycle;
 
     if ((temp >= policy[i].temp_up_adjust) && (i != (arr_size-1))) {
-        new_duty_cycle = policy[i+1].duty_cycle;
-    }
-    else if ((temp <= policy[i].temp_down_adjust) && (i != 0)) {
-        new_duty_cycle = policy[i-1].duty_cycle;
-    }
+	    new_duty_cycle = policy[i+1].duty_cycle;
+	}
+	else if ((temp <= policy[i].temp_down_adjust) && (i != 0)) {
+	    new_duty_cycle = policy[i-1].duty_cycle;
+	}
 
-    if (new_duty_cycle == cur_duty_cycle) {
+	if (new_duty_cycle == cur_duty_cycle) {
         /* Duty cycle does not change, just return */
-        return ONLP_STATUS_OK;
-    }
+	    return ONLP_STATUS_OK;
+	}
 
     return onlp_fani_percentage_set(ONLP_FAN_ID_CREATE(1), new_duty_cycle);
 }
@@ -292,4 +292,3 @@ onlp_sysi_platform_manage_leds(void)
 {
     return ONLP_STATUS_E_UNSUPPORTED;
 }
-

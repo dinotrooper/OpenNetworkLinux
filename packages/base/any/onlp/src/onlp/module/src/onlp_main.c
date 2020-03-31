@@ -33,7 +33,6 @@
 #include <syslog.h>
 #include <onlp/platformi/sysi.h>
 
-
 static void platform_manager_daemon__(const char* pidfile, char** argv);
 
 /**

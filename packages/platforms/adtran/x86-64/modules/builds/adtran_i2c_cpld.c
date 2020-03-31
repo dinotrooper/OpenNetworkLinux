@@ -2,7 +2,7 @@
  * A hwmon driver for the adtran_i2c_cpld
  *
  * Copyright (C) 2013 Accton Technology Corporation.
- * Stephen Boyett <glitterqueen31@gmail.com>
+ * Stephen Boyett <stephen.boyett@adtran.com>
  *
  * Based on ad7414.c
  * Copyright 2006 Stefan Roese <sr at denx.de>, DENX Software Engineering
@@ -233,7 +233,7 @@ EXPORT_SYMBOL(platform_adtran_8305);
 
 
 
-MODULE_AUTHOR("Stephen Griff Alex John (:");
+MODULE_AUTHOR("Stephen Boyett <stephen.boyett@adtran.com>");
 MODULE_DESCRIPTION("adtran_i2c_cpld driver");
 MODULE_LICENSE("GPL");
 

@@ -52,6 +52,7 @@ onlp_init(void)
     onlp_api_lock_init();
 #endif
 
+
     onlp_json_init(cfile);
     onlp_sys_init();
     onlp_sfp_init();
