@@ -8,11 +8,13 @@ class OnlPlatform_x86_64_adtran_8305_r0(OnlPlatformAdtran,
     SYS_OBJECT_ID=".8305"
 
     def baseconfig(self):
-        self.insmod('optoe')
-        self.insmod('ym2651y')
-        self.insmod('adtran_i2c_cpld')
-        for m in [ 'fan', 'cpld1', 'psu', 'leds' ]:
-            self.insmod("x86-64-adtran-8305-%s.ko" % m)
+        # self.insmod('optoe')
+        # self.insmod('ym2651y')
+        # self.insmod('adtran_i2c_cpld')
+        # for m in [ 'fan', 'cpld1', 'psu', 'leds' ]:
+        #     self.insmod("x86-64-adtran-8305-%s.ko" % m)
+
+        self.insmod("drv_ucext_usb.ko")
 
         # ########### initialize I2C bus 0 ###########
         # self.new_i2c_devices([
