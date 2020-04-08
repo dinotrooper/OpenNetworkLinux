@@ -28,6 +28,7 @@ RUN apt-get update && apt-get install -y \
 	device-tree-compiler \
         devscripts \
         devscripts \
+	dfu-util \
         dialog \
         dosfstools \
         doxygen \
