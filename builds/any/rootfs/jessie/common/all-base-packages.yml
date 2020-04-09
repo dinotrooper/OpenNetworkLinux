@@ -81,5 +81,3 @@
 - sysstat
 - ipmitool
 - lm-sensors
-- libusb-1.0-0-dev
-- dfu-util
