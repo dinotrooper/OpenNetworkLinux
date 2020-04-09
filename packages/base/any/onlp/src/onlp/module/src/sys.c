@@ -74,9 +74,8 @@ static int
 onlp_sys_init_locked__(void)
 {
     int rv;
-    const char* current_platform = platform_detect__();
-    const char* current_interface_debug = onlp_sysi_platform_get();
 
+    const char* current_platform = platform_detect__();
     if(current_platform == NULL) {
         AIM_DIE("Could not determine the current platform.");
     }
@@ -94,6 +93,7 @@ onlp_sys_init_locked__(void)
         }
     }
 
+    /* If we get here, its all good */
     aim_free((char*)current_platform);
     rv = onlp_sysi_init();
     return rv;
