@@ -72,7 +72,7 @@ static char* tempfiles__[] =  /* must map with onlp_thermal_id */
     "/sys/cass/hwmon/hwmon2/temp6_label",
 };
 
-static char* threshold_files__[3][8] =
+static char* threshold_files__[][] =
 {
     {
     "reserved",
@@ -101,7 +101,7 @@ static char* threshold_files__[3][8] =
     "/sys/cass/hwmon/hwmon2/temp4_emergency",
     "/sys/cass/hwmon/hwmon2/temp5_emergency",
     "/sys/cass/hwmon/hwmon2/temp6_emergency"},
-}
+};
 
 /* Static values */
 static onlp_thermal_info_t linfo[] = {
