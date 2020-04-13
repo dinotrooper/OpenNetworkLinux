@@ -78,8 +78,9 @@ static char* tempfiles__[] =  /* must map with onlp_thermal_id */
     "/sys/cass/hwmon/hwmon2/temp6_label",
 };
 
-static char* temp_warning_files__[] =  /* must map with onlp_thermal_id */
+static char* threshold_files[3][8]
 {
+    {
     "reserved",
     NULL,                 
     "/sys/cass/hwmon/hwmon2/temp1_max",
@@ -87,11 +88,8 @@ static char* temp_warning_files__[] =  /* must map with onlp_thermal_id */
     "/sys/cass/hwmon/hwmon2/temp3_max",
     "/sys/cass/hwmon/hwmon2/temp4_max",
     "/sys/cass/hwmon/hwmon2/temp5_max",
-    "/sys/cass/hwmon/hwmon2/temp6_max",
-};
-
-static char* temp_error_files__[] =  /* must map with onlp_thermal_id */
-{
+    "/sys/cass/hwmon/hwmon2/temp6_max"},
+    {
     "reserved",
     NULL,                  
     "/sys/cass/hwmon/hwmon2/temp1_critical",
@@ -99,26 +97,16 @@ static char* temp_error_files__[] =  /* must map with onlp_thermal_id */
     "/sys/cass/hwmon/hwmon2/temp3_critical",
     "/sys/cass/hwmon/hwmon2/temp4_critical",
     "/sys/cass/hwmon/hwmon2/temp5_critical",
-    "/sys/cass/hwmon/hwmon2/temp6_critical",
-};
-
-static char* temp_shutdown_files__[] =  /* must map with onlp_thermal_id */
-{
+    "/sys/cass/hwmon/hwmon2/temp6_critical"},
     "reserved",
+    {
     NULL,               
     "/sys/cass/hwmon/hwmon2/temp1_emergency",
     "/sys/cass/hwmon/hwmon2/temp2_emergency",
     "/sys/cass/hwmon/hwmon2/temp3_emergency",
     "/sys/cass/hwmon/hwmon2/temp4_emergency",
     "/sys/cass/hwmon/hwmon2/temp5_emergency",
-    "/sys/cass/hwmon/hwmon2/temp6_emergency", 
-};
-
-static char* threshold_files[]
-{
-    temp_error_files__,
-    temp_warning_files__,
-    temp_shutdown_files__,
+    "/sys/cass/hwmon/hwmon2/temp6_emergency"},
 }
 
 /* Static values */
