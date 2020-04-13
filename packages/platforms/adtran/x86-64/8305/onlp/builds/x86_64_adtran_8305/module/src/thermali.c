@@ -37,9 +37,9 @@
         }                                       \
     } while(0)
 
-#define THERMAL_WARNING 0,
-#define THERMAL_ERROR 1,
-#define THERMAL_SHUTDOWN 2,
+#define THERMAL_WARNING 0
+#define THERMAL_ERROR 1
+#define THERMAL_SHUTDOWN 2
 
 #define GET_ONLP_THERMAL_THRESHHOLD(_oid)   \
     { get_threshold(THERMAL_WARNING, _oid),        \
@@ -72,7 +72,7 @@ static char* tempfiles__[] =  /* must map with onlp_thermal_id */
     "/sys/cass/hwmon/hwmon2/temp6_label",
 };
 
-static char* threshold_files__[][] =
+static char* threshold_files__[][40] =
 {
     {
     "reserved",
@@ -102,6 +102,8 @@ static char* threshold_files__[][] =
     "/sys/cass/hwmon/hwmon2/temp5_emergency",
     "/sys/cass/hwmon/hwmon2/temp6_emergency"},
 };
+
+char* get_threshold(int type, int oid);
 
 /* Static values */
 static onlp_thermal_info_t linfo[] = {
@@ -136,7 +138,7 @@ static onlp_thermal_info_t linfo[] = {
         }
 };
 
-const char*
+char*
 get_threshold(int type, int oid)
 {
     return threshold_files[type][oid];
