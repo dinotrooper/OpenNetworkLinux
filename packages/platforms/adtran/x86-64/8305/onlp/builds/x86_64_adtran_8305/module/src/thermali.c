@@ -37,9 +37,9 @@
         }                                       \
     } while(0)
 
-#define THERMAL_WARNING = 0,
-#define THERMAL_ERROR = 1,
-#define THERMAL_SHUTDOWN =2,
+#define THERMAL_WARNING 0,
+#define THERMAL_ERROR 1,
+#define THERMAL_SHUTDOWN 2,
 
 #define GET_ONLP_THERMAL_THRESHHOLD(_oid)   \
     { get_threshold(THERMAL_WARNING, _oid),        \
@@ -59,12 +59,6 @@ enum onlp_thermal_id
     THERMAL_1_ON_PSU2,
 };
 
-enum onlp_thermal_value_type
-{
-    THERMAL_WARNING = 0,
-    THERMAL_ERROR = 1,
-    THERMAL_SHUTDOWN = 2,
-};
 
 static char* tempfiles__[] =  /* must map with onlp_thermal_id */
 {
@@ -78,7 +72,7 @@ static char* tempfiles__[] =  /* must map with onlp_thermal_id */
     "/sys/cass/hwmon/hwmon2/temp6_label",
 };
 
-static char* threshold_files[3][8]
+static char* threshold_files__[3][8] =
 {
     {
     "reserved",
@@ -142,7 +136,7 @@ static onlp_thermal_info_t linfo[] = {
         }
 };
 
-int
+const char*
 get_threshold(int type, int oid)
 {
     return threshold_files[type][oid];
@@ -179,5 +173,5 @@ onlp_thermali_info_get(onlp_oid_t id, onlp_thermal_info_t* info)
     *info = linfo[local_id];
 
 
-    return onlp_file_read_int(&info->mcelsius, devfiles__[local_id]);
+    return onlp_file_read_int(&info->mcelsius, tempfiles__[local_id]);
 }
