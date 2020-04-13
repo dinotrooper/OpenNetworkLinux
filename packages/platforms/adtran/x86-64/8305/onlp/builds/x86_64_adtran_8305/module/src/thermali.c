@@ -37,6 +37,17 @@
         }                                       \
     } while(0)
 
+#define THERMAL_WARNING = 0,
+#define THERMAL_ERROR = 1,
+#define THERMAL_SHUTDOWN =2,
+
+#define GET_ONLP_THERMAL_THRESHHOLD(_oid)   \
+    { get_threshold(THERMAL_WARNING, _oid),        \
+      get_threshold(THERMAL_ERROR, _oid),          \
+      get_threshold(THERMAL_SHUTDOWN, _oid) }    
+
+
+
 enum onlp_thermal_id
 {
     THERMAL_RESERVED = 0,
@@ -48,59 +59,106 @@ enum onlp_thermal_id
     THERMAL_1_ON_PSU2,
 };
 
-static char* devfiles__[] =  /* must map with onlp_thermal_id */
+enum onlp_thermal_value_type
 {
-    "reserved",
-    NULL,                  /* CPU_CORE files */
-    "/sys/bus/i2c/devices/3-0048*temp1_input",
-    "/sys/bus/i2c/devices/3-0049*temp1_input",
-    "/sys/bus/i2c/devices/3-004a*temp1_input",
-    "/sys/bus/i2c/devices/3-004b*temp1_input",
-    "/sys/bus/i2c/devices/11-005b*psu_temp1_input",
-    "/sys/bus/i2c/devices/10-0058*psu_temp1_input",
+    THERMAL_WARNING = 0,
+    THERMAL_ERROR = 1,
+    THERMAL_SHUTDOWN = 2,
 };
 
-static char* cpu_coretemp_files[] =
-    {
-        "/sys/devices/platform/coretemp.0*temp2_input",
-        "/sys/devices/platform/coretemp.0*temp3_input",
-        "/sys/devices/platform/coretemp.0*temp4_input",
-        "/sys/devices/platform/coretemp.0*temp5_input",
-        NULL,
-    };
+static char* tempfiles__[] =  /* must map with onlp_thermal_id */
+{
+    "reserved",
+    NULL,                  
+    "/sys/cass/hwmon/hwmon2/temp1_label",
+    "/sys/cass/hwmon/hwmon2/temp2_label",
+    "/sys/cass/hwmon/hwmon2/temp3_label",
+    "/sys/cass/hwmon/hwmon2/temp4_label",
+    "/sys/cass/hwmon/hwmon2/temp5_label",
+    "/sys/cass/hwmon/hwmon2/temp6_label",
+};
+
+static char* temp_warning_files__[] =  /* must map with onlp_thermal_id */
+{
+    "reserved",
+    NULL,                 
+    "/sys/cass/hwmon/hwmon2/temp1_max",
+    "/sys/cass/hwmon/hwmon2/temp2_max",
+    "/sys/cass/hwmon/hwmon2/temp3_max",
+    "/sys/cass/hwmon/hwmon2/temp4_max",
+    "/sys/cass/hwmon/hwmon2/temp5_max",
+    "/sys/cass/hwmon/hwmon2/temp6_max",
+};
+
+static char* temp_error_files__[] =  /* must map with onlp_thermal_id */
+{
+    "reserved",
+    NULL,                  
+    "/sys/cass/hwmon/hwmon2/temp1_critical",
+    "/sys/cass/hwmon/hwmon2/temp2_critical",
+    "/sys/cass/hwmon/hwmon2/temp3_critical",
+    "/sys/cass/hwmon/hwmon2/temp4_critical",
+    "/sys/cass/hwmon/hwmon2/temp5_critical",
+    "/sys/cass/hwmon/hwmon2/temp6_critical",
+};
+
+static char* temp_shutdown_files__[] =  /* must map with onlp_thermal_id */
+{
+    "reserved",
+    NULL,               
+    "/sys/cass/hwmon/hwmon2/temp1_emergency",
+    "/sys/cass/hwmon/hwmon2/temp2_emergency",
+    "/sys/cass/hwmon/hwmon2/temp3_emergency",
+    "/sys/cass/hwmon/hwmon2/temp4_emergency",
+    "/sys/cass/hwmon/hwmon2/temp5_emergency",
+    "/sys/cass/hwmon/hwmon2/temp6_emergency", 
+};
+
+static char* threshold_files[]
+{
+    temp_error_files__,
+    temp_warning_files__,
+    temp_shutdown_files__,
+}
 
 /* Static values */
 static onlp_thermal_info_t linfo[] = {
 	{ }, /* Not used */
 	{ { ONLP_THERMAL_ID_CREATE(THERMAL_CPU_CORE), "CPU Core", 0},
             ONLP_THERMAL_STATUS_PRESENT,
-            ONLP_THERMAL_CAPS_ALL, 0, ONLP_THERMAL_THRESHOLD_INIT_DEFAULTS
+            ONLP_THERMAL_CAPS_ALL, 0, GET_ONLP_THERMAL_THRESHHOLD(1)
         },
 	{ { ONLP_THERMAL_ID_CREATE(THERMAL_1_ON_MAIN_BROAD), "Chassis Thermal Sensor 1", 0},
             ONLP_THERMAL_STATUS_PRESENT,
-            ONLP_THERMAL_CAPS_ALL, 0, ONLP_THERMAL_THRESHOLD_INIT_DEFAULTS
+            ONLP_THERMAL_CAPS_ALL, 0, GET_ONLP_THERMAL_THRESHHOLD(2)
         },
 	{ { ONLP_THERMAL_ID_CREATE(THERMAL_2_ON_MAIN_BROAD), "Chassis Thermal Sensor 2", 0},
             ONLP_THERMAL_STATUS_PRESENT,
-            ONLP_THERMAL_CAPS_ALL, 0, ONLP_THERMAL_THRESHOLD_INIT_DEFAULTS
+            ONLP_THERMAL_CAPS_ALL, 0, GET_ONLP_THERMAL_THRESHHOLD(3)
         },
 	{ { ONLP_THERMAL_ID_CREATE(THERMAL_3_ON_MAIN_BROAD), "Chassis Thermal Sensor 3", 0},
             ONLP_THERMAL_STATUS_PRESENT,
-            ONLP_THERMAL_CAPS_ALL, 0, ONLP_THERMAL_THRESHOLD_INIT_DEFAULTS
+            ONLP_THERMAL_CAPS_ALL, 0, GET_ONLP_THERMAL_THRESHHOLD(4)
         },
 	{ { ONLP_THERMAL_ID_CREATE(THERMAL_3_ON_MAIN_BROAD), "Chassis Thermal Sensor 4", 0},
             ONLP_THERMAL_STATUS_PRESENT,
-            ONLP_THERMAL_CAPS_ALL, 0, ONLP_THERMAL_THRESHOLD_INIT_DEFAULTS
+            ONLP_THERMAL_CAPS_ALL, 0, GET_ONLP_THERMAL_THRESHHOLD(5)
         },
 	{ { ONLP_THERMAL_ID_CREATE(THERMAL_1_ON_PSU1), "PSU-1 Thermal Sensor 1", ONLP_PSU_ID_CREATE(PSU1_ID)},
             ONLP_THERMAL_STATUS_PRESENT,
-            ONLP_THERMAL_CAPS_ALL, 0, ONLP_THERMAL_THRESHOLD_INIT_DEFAULTS
+            ONLP_THERMAL_CAPS_ALL, 0, GET_ONLP_THERMAL_THRESHHOLD(6)
         },
 	{ { ONLP_THERMAL_ID_CREATE(THERMAL_1_ON_PSU2), "PSU-2 Thermal Sensor 1", ONLP_PSU_ID_CREATE(PSU2_ID)},
             ONLP_THERMAL_STATUS_PRESENT,
-            ONLP_THERMAL_CAPS_ALL, 0, ONLP_THERMAL_THRESHOLD_INIT_DEFAULTS
+            ONLP_THERMAL_CAPS_ALL, 0, GET_ONLP_THERMAL_THRESHHOLD(7)
         }
 };
+
+int
+get_threshold(int type, int oid)
+{
+    return threshold_files[type][oid];
+}
 
 /*
  * This will be called to intiialize the thermali subsystem.
@@ -132,10 +190,6 @@ onlp_thermali_info_get(onlp_oid_t id, onlp_thermal_info_t* info)
     /* Set the onlp_oid_hdr_t and capabilities */
     *info = linfo[local_id];
 
-    if(local_id == THERMAL_CPU_CORE) {
-        int rv = onlp_file_read_int_max(&info->mcelsius, cpu_coretemp_files);
-        return rv;
-    }
 
     return onlp_file_read_int(&info->mcelsius, devfiles__[local_id]);
 }
