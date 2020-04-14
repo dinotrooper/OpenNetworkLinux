@@ -23,7 +23,7 @@
 #endif
 
 #ifndef NUM_UCEXT_TIVAC_TEMPS
-    #define NUM_UCEXT_TIVAC_TEMPS    26
+    #define NUM_UCEXT_TIVAC_TEMPS    6
 #endif
 
 #ifndef NUM_UCEXT_TIVAC_VOLTS
