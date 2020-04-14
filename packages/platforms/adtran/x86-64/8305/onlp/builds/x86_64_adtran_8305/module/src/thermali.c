@@ -40,11 +40,7 @@
 #define THERMAL_WARNING 0
 #define THERMAL_ERROR 1
 #define THERMAL_SHUTDOWN 2
-
-#define GET_ONLP_THERMAL_THRESHHOLD(_oid)   \
-    { get_threshold(THERMAL_WARNING, _oid),        \
-      get_threshold(THERMAL_ERROR, _oid),          \
-      get_threshold(THERMAL_SHUTDOWN, _oid) }    
+    
 
 
 
@@ -102,7 +98,6 @@ static char* threshold_files__[][40] =
     },
 };
 
-int get_threshold(int type, int oid);
 
 /* Static values */
 static onlp_thermal_info_t linfo[] = {
@@ -110,28 +105,46 @@ static onlp_thermal_info_t linfo[] = {
 	{ 
         { ONLP_THERMAL_ID_CREATE(THERMAL_CPU_CORE), "CPU Core", 0},
             ONLP_THERMAL_STATUS_PRESENT,
-            ONLP_THERMAL_CAPS_ALL, 0, GET_ONLP_THERMAL_THRESHHOLD(1)
+            ONLP_THERMAL_CAPS_ALL, 0, 
+            get_threshold(THERMAL_WARNING, 0),       
+            get_threshold(THERMAL_ERROR, 0),          
+            get_threshold(THERMAL_SHUTDOWN, 0) 
     },
 	{ 
         { ONLP_THERMAL_ID_CREATE(THERMAL_1_ON_MAIN_BROAD), "Chassis Thermal Sensor 1", 0},
             ONLP_THERMAL_STATUS_PRESENT,
-            ONLP_THERMAL_CAPS_ALL, 0, GET_ONLP_THERMAL_THRESHHOLD(2)
+            ONLP_THERMAL_CAPS_ALL, 0,             
+            get_threshold(THERMAL_WARNING, 1),       
+            get_threshold(THERMAL_ERROR, 1),          
+            get_threshold(THERMAL_SHUTDOWN, 1) 
         },
 	{ { ONLP_THERMAL_ID_CREATE(THERMAL_2_ON_MAIN_BROAD), "Chassis Thermal Sensor 2", 0},
             ONLP_THERMAL_STATUS_PRESENT,
-            ONLP_THERMAL_CAPS_ALL, 0, GET_ONLP_THERMAL_THRESHHOLD(3)
+            ONLP_THERMAL_CAPS_ALL, 0,             
+            get_threshold(THERMAL_WARNING, 2),       
+            get_threshold(THERMAL_ERROR, 2),          
+            get_threshold(THERMAL_SHUTDOWN, 2) 
         },
 	{ { ONLP_THERMAL_ID_CREATE(THERMAL_3_ON_MAIN_BROAD), "Chassis Thermal Sensor 3", 0},
             ONLP_THERMAL_STATUS_PRESENT,
-            ONLP_THERMAL_CAPS_ALL, 0, GET_ONLP_THERMAL_THRESHHOLD(4)
+            ONLP_THERMAL_CAPS_ALL, 0,             
+            get_threshold(THERMAL_WARNING, 3),       
+            get_threshold(THERMAL_ERROR, 3),          
+            get_threshold(THERMAL_SHUTDOWN, 3) 
         },
 	{ { ONLP_THERMAL_ID_CREATE(THERMAL_3_ON_MAIN_BROAD), "Chassis Thermal Sensor 4", 0},
             ONLP_THERMAL_STATUS_PRESENT,
-            ONLP_THERMAL_CAPS_ALL, 0, GET_ONLP_THERMAL_THRESHHOLD(5)
+            ONLP_THERMAL_CAPS_ALL, 0,             
+            get_threshold(THERMAL_WARNING, 4),       
+            get_threshold(THERMAL_ERROR, 4),          
+            get_threshold(THERMAL_SHUTDOWN, 4) 
         },
 	{ { ONLP_THERMAL_ID_CREATE(THERMAL_1_ON_PSU1), "PSU-1 Thermal Sensor 1", ONLP_PSU_ID_CREATE(PSU1_ID)},
             ONLP_THERMAL_STATUS_PRESENT,
-            ONLP_THERMAL_CAPS_ALL, 0, GET_ONLP_THERMAL_THRESHHOLD(6)
+            ONLP_THERMAL_CAPS_ALL, 0,             
+            get_threshold(THERMAL_WARNING, 5),       
+            get_threshold(THERMAL_ERROR, 5),          
+            get_threshold(THERMAL_SHUTDOWN, 5) 
         },
 };
 
@@ -140,7 +153,7 @@ get_threshold(int type, int oid)
 {
     int value;
 
-    value = onlp_file_read_int(*value, threshold_files__[type][oid])
+    value = onlp_file_read_int(*value, threshold_files__[type][oid]);
     return value;
 }
 
