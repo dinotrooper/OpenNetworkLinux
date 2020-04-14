@@ -54,12 +54,12 @@ int onlp_thermali_status_get(onlp_oid_t id, uint32_t* rv);
  */
 int onlp_thermali_hdr_get(onlp_oid_t id, onlp_oid_hdr_t* rv);
 
-/**
- * @brief Get a thermal threshold for a device
- * @param type The type of threshold to get (0-2)
- * @param oid the object id of the device to get the threshold for
- */
-int get_threshold(int type, int oid);
+// /**
+//  * @brief Get a thermal threshold for a device
+//  * @param type The type of threshold to get (0-2)
+//  * @param oid the object id of the device to get the threshold for
+//  */
+// int get_threshold(int type, int oid);
 
 /**
  * @brief Generic ioctl.
