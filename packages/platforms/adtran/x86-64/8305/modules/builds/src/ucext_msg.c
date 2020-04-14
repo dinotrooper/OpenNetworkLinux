@@ -395,9 +395,9 @@ int ucext_msg_update_temps(int devid, void *p_data, int *p_temp_vals) {
     }
 
 // LTG Temporary block of temps
-    if(p_msg_data->msg_restrict!=0 || p_msg_data->msg_restrict==0) {
-        return 0;
-    }
+    // if(p_msg_data->msg_restrict!=0 || p_msg_data->msg_restrict==0) {
+    //     return 0;
+    // }
 
     mutex_lock(&p_msg_data->update_lock);
 
@@ -419,8 +419,10 @@ int ucext_msg_update_temps(int devid, void *p_data, int *p_temp_vals) {
                 goto error;
             }
 
-            if( (p_msg_data->rx_buff.rsp_msg.rsp_hdr.result != URSP_ACK) ||  
-                (p_msg_data->rx_buff.rsp_msg.rsp_hdr.len!=((sizeof(t_ucext_rsp_hdr)-1)+(2*NUM_UCEXT_TIVAC_TEMPS))) ) {
+            // if( (p_msg_data->rx_buff.rsp_msg.rsp_hdr.result != URSP_ACK) ||  
+            //     (p_msg_data->rx_buff.rsp_msg.rsp_hdr.len!=((sizeof(t_ucext_rsp_hdr)-1)+(2*NUM_UCEXT_TIVAC_TEMPS))) ) {
+            if( (p_msg_data->rx_buff.rsp_msg.rsp_hdr.result != URSP_ACK)) {            
+
                 dev_info(p_msg_data->dev, "ucext_msg_update_temps[%d] response header (0x%02x,0x%02x) invalid\n", devid,
                          p_msg_data->rx_buff.rsp_msg.rsp_hdr.result, p_msg_data->rx_buff.rsp_msg.rsp_hdr.len);
                 retval = -EIO;
