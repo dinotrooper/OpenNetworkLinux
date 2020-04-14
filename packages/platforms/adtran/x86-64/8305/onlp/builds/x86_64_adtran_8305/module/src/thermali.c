@@ -98,6 +98,15 @@ static char* threshold_files__[][40] =
     },
 };
 
+int
+get_threshold(int type, int oid)
+{
+    int value;
+
+    value = onlp_file_read_int(*value, threshold_files__[type][oid]);
+    return value;
+}
+
 
 /* Static values */
 static onlp_thermal_info_t linfo[] = {
@@ -148,14 +157,6 @@ static onlp_thermal_info_t linfo[] = {
         },
 };
 
-int
-get_threshold(int type, int oid)
-{
-    int value;
-
-    value = onlp_file_read_int(*value, threshold_files__[type][oid]);
-    return value;
-}
 
 /*
  * This will be called to intiialize the thermali subsystem.

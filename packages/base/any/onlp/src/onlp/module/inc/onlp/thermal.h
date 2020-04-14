@@ -159,14 +159,6 @@ void onlp_thermal_dump(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags);
  */
 void onlp_thermal_show(onlp_oid_t id, aim_pvs_t* pvs, uint32_t flags);
 
-/**
- * @brief Get a thermal threshold for a device
- * @param type The type of threshold to get (0-2)
- * @param oid the object id of the device to get the threshold for
- */
-int get_threshold(int type, int oid);
-
-
 
 
 
