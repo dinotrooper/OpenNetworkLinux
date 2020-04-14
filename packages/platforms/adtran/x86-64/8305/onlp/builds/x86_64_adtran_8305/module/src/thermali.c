@@ -63,56 +63,57 @@ enum onlp_thermal_id
 static char* tempfiles__[] =  /* must map with onlp_thermal_id */
 {
     "reserved",
-    NULL,                  
-    "/sys/cass/hwmon/hwmon2/temp1_label",
-    "/sys/cass/hwmon/hwmon2/temp2_label",
-    "/sys/cass/hwmon/hwmon2/temp3_label",
-    "/sys/cass/hwmon/hwmon2/temp4_label",
-    "/sys/cass/hwmon/hwmon2/temp5_label",
-    "/sys/cass/hwmon/hwmon2/temp6_label",
+    "/sys/class/hwmon/hwmon2/temp1_input",
+    "/sys/class/hwmon/hwmon2/temp2_input",
+    "/sys/class/hwmon/hwmon2/temp3_input",
+    "/sys/class/hwmon/hwmon2/temp4_input",
+    "/sys/class/hwmon/hwmon2/temp5_input",
+    "/sys/class/hwmon/hwmon2/temp6_input",
 };
 
 static char* threshold_files__[][40] =
 {
     {
-    "reserved",
-    NULL,                 
-    "/sys/cass/hwmon/hwmon2/temp1_max",
-    "/sys/cass/hwmon/hwmon2/temp2_max",
-    "/sys/cass/hwmon/hwmon2/temp3_max",
-    "/sys/cass/hwmon/hwmon2/temp4_max",
-    "/sys/cass/hwmon/hwmon2/temp5_max",
-    "/sys/cass/hwmon/hwmon2/temp6_max"},
+        "reserved",
+        "/sys/class/hwmon/hwmon2/temp1_max",
+        "/sys/class/hwmon/hwmon2/temp2_max",
+        "/sys/class/hwmon/hwmon2/temp3_max",
+        "/sys/class/hwmon/hwmon2/temp4_max",
+        "/sys/class/hwmon/hwmon2/temp5_max",
+        "/sys/class/hwmon/hwmon2/temp6_max"
+    },
     {
-    "reserved",
-    NULL,                  
-    "/sys/cass/hwmon/hwmon2/temp1_critical",
-    "/sys/cass/hwmon/hwmon2/temp2_critical",
-    "/sys/cass/hwmon/hwmon2/temp3_critical",
-    "/sys/cass/hwmon/hwmon2/temp4_critical",
-    "/sys/cass/hwmon/hwmon2/temp5_critical",
-    "/sys/cass/hwmon/hwmon2/temp6_critical"},
-    "reserved",
+        "reserved",
+        "/sys/class/hwmon/hwmon2/temp1_critical",
+        "/sys/class/hwmon/hwmon2/temp2_critical",
+        "/sys/class/hwmon/hwmon2/temp3_critical",
+        "/sys/class/hwmon/hwmon2/temp4_critical",
+        "/sys/class/hwmon/hwmon2/temp5_critical",
+        "/sys/class/hwmon/hwmon2/temp6_critical"
+    },
     {
-    NULL,               
-    "/sys/cass/hwmon/hwmon2/temp1_emergency",
-    "/sys/cass/hwmon/hwmon2/temp2_emergency",
-    "/sys/cass/hwmon/hwmon2/temp3_emergency",
-    "/sys/cass/hwmon/hwmon2/temp4_emergency",
-    "/sys/cass/hwmon/hwmon2/temp5_emergency",
-    "/sys/cass/hwmon/hwmon2/temp6_emergency"},
+        "reserved",
+        "/sys/class/hwmon/hwmon2/temp1_emergency",
+        "/sys/class/hwmon/hwmon2/temp2_emergency",
+        "/sys/class/hwmon/hwmon2/temp3_emergency",
+        "/sys/class/hwmon/hwmon2/temp4_emergency",
+        "/sys/class/hwmon/hwmon2/temp5_emergency",
+        "/sys/class/hwmon/hwmon2/temp6_emergency"
+    },
 };
 
-char* get_threshold(int type, int oid);
+int get_threshold(int type, int oid);
 
 /* Static values */
 static onlp_thermal_info_t linfo[] = {
 	{ }, /* Not used */
-	{ { ONLP_THERMAL_ID_CREATE(THERMAL_CPU_CORE), "CPU Core", 0},
+	{ 
+        { ONLP_THERMAL_ID_CREATE(THERMAL_CPU_CORE), "CPU Core", 0},
             ONLP_THERMAL_STATUS_PRESENT,
             ONLP_THERMAL_CAPS_ALL, 0, GET_ONLP_THERMAL_THRESHHOLD(1)
-        },
-	{ { ONLP_THERMAL_ID_CREATE(THERMAL_1_ON_MAIN_BROAD), "Chassis Thermal Sensor 1", 0},
+    },
+	{ 
+        { ONLP_THERMAL_ID_CREATE(THERMAL_1_ON_MAIN_BROAD), "Chassis Thermal Sensor 1", 0},
             ONLP_THERMAL_STATUS_PRESENT,
             ONLP_THERMAL_CAPS_ALL, 0, GET_ONLP_THERMAL_THRESHHOLD(2)
         },
@@ -132,16 +133,15 @@ static onlp_thermal_info_t linfo[] = {
             ONLP_THERMAL_STATUS_PRESENT,
             ONLP_THERMAL_CAPS_ALL, 0, GET_ONLP_THERMAL_THRESHHOLD(6)
         },
-	{ { ONLP_THERMAL_ID_CREATE(THERMAL_1_ON_PSU2), "PSU-2 Thermal Sensor 1", ONLP_PSU_ID_CREATE(PSU2_ID)},
-            ONLP_THERMAL_STATUS_PRESENT,
-            ONLP_THERMAL_CAPS_ALL, 0, GET_ONLP_THERMAL_THRESHHOLD(7)
-        }
 };
 
-char*
+int
 get_threshold(int type, int oid)
 {
-    return threshold_files[type][oid];
+    int value;
+
+    value = onlp_file_read_int(*value, threshold_files__[type][oid])
+    return value;
 }
 
 /*
