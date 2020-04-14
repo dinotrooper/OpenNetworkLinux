@@ -67,36 +67,36 @@ static char* tempfiles__[] =  /* must map with onlp_thermal_id */
     "/sys/class/hwmon/hwmon2/temp6_input",
 };
 
-static char* threshold_files__[][40] =
-{
-    {
-        "reserved",
-        "/sys/class/hwmon/hwmon2/temp1_max",
-        "/sys/class/hwmon/hwmon2/temp2_max",
-        "/sys/class/hwmon/hwmon2/temp3_max",
-        "/sys/class/hwmon/hwmon2/temp4_max",
-        "/sys/class/hwmon/hwmon2/temp5_max",
-        "/sys/class/hwmon/hwmon2/temp6_max"
-    },
-    {
-        "reserved",
-        "/sys/class/hwmon/hwmon2/temp1_critical",
-        "/sys/class/hwmon/hwmon2/temp2_critical",
-        "/sys/class/hwmon/hwmon2/temp3_critical",
-        "/sys/class/hwmon/hwmon2/temp4_critical",
-        "/sys/class/hwmon/hwmon2/temp5_critical",
-        "/sys/class/hwmon/hwmon2/temp6_critical"
-    },
-    {
-        "reserved",
-        "/sys/class/hwmon/hwmon2/temp1_emergency",
-        "/sys/class/hwmon/hwmon2/temp2_emergency",
-        "/sys/class/hwmon/hwmon2/temp3_emergency",
-        "/sys/class/hwmon/hwmon2/temp4_emergency",
-        "/sys/class/hwmon/hwmon2/temp5_emergency",
-        "/sys/class/hwmon/hwmon2/temp6_emergency"
-    },
-};
+// static char* threshold_files__[][40] =
+// {
+//     {
+//         "reserved",
+//         "/sys/class/hwmon/hwmon2/temp1_max",
+//         "/sys/class/hwmon/hwmon2/temp2_max",
+//         "/sys/class/hwmon/hwmon2/temp3_max",
+//         "/sys/class/hwmon/hwmon2/temp4_max",
+//         "/sys/class/hwmon/hwmon2/temp5_max",
+//         "/sys/class/hwmon/hwmon2/temp6_max"
+//     },
+//     {
+//         "reserved",
+//         "/sys/class/hwmon/hwmon2/temp1_critical",
+//         "/sys/class/hwmon/hwmon2/temp2_critical",
+//         "/sys/class/hwmon/hwmon2/temp3_critical",
+//         "/sys/class/hwmon/hwmon2/temp4_critical",
+//         "/sys/class/hwmon/hwmon2/temp5_critical",
+//         "/sys/class/hwmon/hwmon2/temp6_critical"
+//     },
+//     {
+//         "reserved",
+//         "/sys/class/hwmon/hwmon2/temp1_emergency",
+//         "/sys/class/hwmon/hwmon2/temp2_emergency",
+//         "/sys/class/hwmon/hwmon2/temp3_emergency",
+//         "/sys/class/hwmon/hwmon2/temp4_emergency",
+//         "/sys/class/hwmon/hwmon2/temp5_emergency",
+//         "/sys/class/hwmon/hwmon2/temp6_emergency"
+//     },
+// };
 
 // int
 // get_threshold(int type, int oid)
