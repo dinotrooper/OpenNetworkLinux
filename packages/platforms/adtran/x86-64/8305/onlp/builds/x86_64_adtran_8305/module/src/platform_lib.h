@@ -52,6 +52,21 @@ int deviceNodeWriteInt(char *filename, int value, int data_len);
 int deviceNodeReadBinary(char *filename, char *buffer, int buf_size, int data_len);
 int deviceNodeReadString(char *filename, char *buffer, int buf_size, int data_len);
 
+/** onlp_thermal_threshold */
+typedef enum sdx8305_thermal_threshold_e {
+    SDX8305_THERMAL_THRESHOLD_WARNING_DEFAULT = 85000,
+    SDX8305_THERMAL_THRESHOLD_ERROR_DEFAULT = 95000,
+    SDX8305_THERMAL_THRESHOLD_SHUTDOWN_DEFAULT = 100000,
+} sdx8305_thermal_threshold_t;
+
+/**
+ * Shortcut for all default thermal threshold value.
+ */
+#define SDX8305_THERMAL_THRESHOLD_INIT_DEFAULTS            \
+    { SDX8305_THERMAL_THRESHOLD_WARNING_DEFAULT,           \
+      SDX8305_THERMAL_THRESHOLD_ERROR_DEFAULT,             \
+      SDX8305_THERMAL_THRESHOLD_SHUTDOWN_DEFAULT }
+
 typedef enum psu_type {
     PSU_TYPE_UNKNOWN,
     PSU_TYPE_AC_F2B_3YPOWER,

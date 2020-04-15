@@ -37,13 +37,9 @@
         }                                       \
     } while(0)
 
-// #define THERMAL_WARNING 0
-// #define THERMAL_ERROR 1
-// #define THERMAL_SHUTDOWN 2
     
 
-
-
+// TODO: Rename these enums to something sensible
 enum onlp_thermal_id
 {
     THERMAL_RESERVED = 0,
@@ -67,73 +63,35 @@ static char* tempfiles__[] =  /* must map with onlp_thermal_id */
     "/sys/class/hwmon/hwmon2/temp6_input",
 };
 
-// static char* threshold_files__[][40] =
-// {
-//     {
-//         "reserved",
-//         "/sys/class/hwmon/hwmon2/temp1_max",
-//         "/sys/class/hwmon/hwmon2/temp2_max",
-//         "/sys/class/hwmon/hwmon2/temp3_max",
-//         "/sys/class/hwmon/hwmon2/temp4_max",
-//         "/sys/class/hwmon/hwmon2/temp5_max",
-//         "/sys/class/hwmon/hwmon2/temp6_max"
-//     },
-//     {
-//         "reserved",
-//         "/sys/class/hwmon/hwmon2/temp1_critical",
-//         "/sys/class/hwmon/hwmon2/temp2_critical",
-//         "/sys/class/hwmon/hwmon2/temp3_critical",
-//         "/sys/class/hwmon/hwmon2/temp4_critical",
-//         "/sys/class/hwmon/hwmon2/temp5_critical",
-//         "/sys/class/hwmon/hwmon2/temp6_critical"
-//     },
-//     {
-//         "reserved",
-//         "/sys/class/hwmon/hwmon2/temp1_emergency",
-//         "/sys/class/hwmon/hwmon2/temp2_emergency",
-//         "/sys/class/hwmon/hwmon2/temp3_emergency",
-//         "/sys/class/hwmon/hwmon2/temp4_emergency",
-//         "/sys/class/hwmon/hwmon2/temp5_emergency",
-//         "/sys/class/hwmon/hwmon2/temp6_emergency"
-//     },
-// };
 
-// int
-// get_threshold(int type, int oid)
-// {
-//     int value;
-
-//     value = onlp_file_read_int(*value, threshold_files__[type][oid]);
-//     return value;
-// }
 
 
 /* Static values */
 static onlp_thermal_info_t linfo[] = {
 	{ }, /* Not used */
-	{ { ONLP_THERMAL_ID_CREATE(THERMAL_CPU_CORE), "CPU Core", 0},
+	{ { ONLP_THERMAL_ID_CREATE(THERMAL_CPU_CORE), "Sensor 1", 0},
             ONLP_THERMAL_STATUS_PRESENT,
-            ONLP_THERMAL_CAPS_ALL, 0, ONLP_THERMAL_THRESHOLD_INIT_DEFAULTS
+            ONLP_THERMAL_CAPS_ALL, 0, SDX8305_THERMAL_THRESHOLD_INIT_DEFAULTS
         },
-	{ { ONLP_THERMAL_ID_CREATE(THERMAL_1_ON_MAIN_BROAD), "Chassis Thermal Sensor 1", 0},
+	{ { ONLP_THERMAL_ID_CREATE(THERMAL_1_ON_MAIN_BROAD), "Thermal Sensor 2", 0},
             ONLP_THERMAL_STATUS_PRESENT,
-            ONLP_THERMAL_CAPS_ALL, 0, ONLP_THERMAL_THRESHOLD_INIT_DEFAULTS
+            ONLP_THERMAL_CAPS_ALL, 0, SDX8305_THERMAL_THRESHOLD_INIT_DEFAULTS
         },
-	{ { ONLP_THERMAL_ID_CREATE(THERMAL_2_ON_MAIN_BROAD), "Chassis Thermal Sensor 2", 0},
+	{ { ONLP_THERMAL_ID_CREATE(THERMAL_2_ON_MAIN_BROAD), "Thermal Sensor 3", 0},
             ONLP_THERMAL_STATUS_PRESENT,
-            ONLP_THERMAL_CAPS_ALL, 0, ONLP_THERMAL_THRESHOLD_INIT_DEFAULTS
+            ONLP_THERMAL_CAPS_ALL, 0, SDX8305_THERMAL_THRESHOLD_INIT_DEFAULTS
         },
-	{ { ONLP_THERMAL_ID_CREATE(THERMAL_3_ON_MAIN_BROAD), "Chassis Thermal Sensor 3", 0},
+	{ { ONLP_THERMAL_ID_CREATE(THERMAL_3_ON_MAIN_BROAD), "Thermal Sensor 4", 0},
             ONLP_THERMAL_STATUS_PRESENT,
-            ONLP_THERMAL_CAPS_ALL, 0, ONLP_THERMAL_THRESHOLD_INIT_DEFAULTS
+            ONLP_THERMAL_CAPS_ALL, 0, SDX8305_THERMAL_THRESHOLD_INIT_DEFAULTS
         },
-	{ { ONLP_THERMAL_ID_CREATE(THERMAL_3_ON_MAIN_BROAD), "Chassis Thermal Sensor 4", 0},
+	{ { ONLP_THERMAL_ID_CREATE(THERMAL_3_ON_MAIN_BROAD), "Thermal Sensor 5", 0},
             ONLP_THERMAL_STATUS_PRESENT,
-            ONLP_THERMAL_CAPS_ALL, 0, ONLP_THERMAL_THRESHOLD_INIT_DEFAULTS
+            ONLP_THERMAL_CAPS_ALL, 0, SDX8305_THERMAL_THRESHOLD_INIT_DEFAULTS
         },
-	{ { ONLP_THERMAL_ID_CREATE(THERMAL_1_ON_PSU1), "PSU-1 Thermal Sensor 1", ONLP_PSU_ID_CREATE(PSU1_ID)},
+	{ { ONLP_THERMAL_ID_CREATE(THERMAL_1_ON_PSU1), "Thermal Sensor 6", ONLP_PSU_ID_CREATE(PSU1_ID)},
             ONLP_THERMAL_STATUS_PRESENT,
-            ONLP_THERMAL_CAPS_ALL, 0, ONLP_THERMAL_THRESHOLD_INIT_DEFAULTS
+            ONLP_THERMAL_CAPS_ALL, 0, SDX8305_THERMAL_THRESHOLD_INIT_DEFAULTS
         },
 };
 
