@@ -29,7 +29,7 @@
 #include "x86_64_adtran_8305_log.h"
 
 #define CHASSIS_FAN_COUNT     4
-#define CHASSIS_THERMAL_COUNT 5
+#define CHASSIS_THERMAL_COUNT 6
 
 #define PSU1_ID 1
 #define PSU2_ID 2
@@ -60,7 +60,7 @@ typedef enum sdx8305_thermal_threshold_e {
 } sdx8305_thermal_threshold_t;
 
 /**
- * Shortcut for all default thermal threshold value.
+ * Shortcut for 8305 default thermal threshold value.
  */
 #define SDX8305_THERMAL_THRESHOLD_INIT_DEFAULTS            \
     { SDX8305_THERMAL_THRESHOLD_WARNING_DEFAULT,           \
