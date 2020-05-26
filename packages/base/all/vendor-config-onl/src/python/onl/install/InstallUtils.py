@@ -355,6 +355,7 @@ class BlkidEntry:
         dev, part = self.device, ""
         
         if "mmcblk" in dev:
+            print(dev)
             dev, part = dev.split("p")
             part = "p" + part
             return dev, part
