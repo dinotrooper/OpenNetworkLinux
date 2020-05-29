@@ -354,10 +354,12 @@ class BlkidEntry:
     def splitDev(self):
         dev, part = self.device, ""
         
-        if "p" in dev:
-            dev, part = dev.split("p")
-            part = "p" + part
-            return dev, part
+        if "mmcblk" in dev:
+            if "p" in dev:
+                dev, part = dev.split("p")
+                part = "p" + part
+                return dev, part
+            return dev, ""
         else:
             while dev[-1:] in string.digits:
                 dev, part = dev[:-1], dev[-1] + part
